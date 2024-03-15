@@ -1,0 +1,7 @@
+settings:
+  timeLimit: 50   #time limit in hours
+
+remoteStorage:
+  address: localhost
+  port: 22
+  path: /path/to/directory
