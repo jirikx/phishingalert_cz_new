@@ -1,4 +1,5 @@
 package cz.phishingalert.scraper.domain
 
-interface Entity {
+interface Entity<ID> {
+    var id: ID?
 }
