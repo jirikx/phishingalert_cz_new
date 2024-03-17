@@ -1,6 +1,5 @@
 package cz.phishingalert.scraper
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -10,7 +9,7 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppConfig::class)
-class ScraperApplication(val appConfig: AppConfig) : ApplicationRunner {
+class ScraperApplication(val orchestrator: Orchestrator) : ApplicationRunner {
     //@RabbitListener(queues = ["myQueue"])
     fun listen(msg: String) {
         println("Message read from myQueue : $msg")
@@ -21,8 +20,7 @@ class ScraperApplication(val appConfig: AppConfig) : ApplicationRunner {
         if (args.containsOption("try-domain") && args.getOptionValues("try-domain").isNotEmpty())
             println(args.getOptionValues("try-domain").first())
 
-        //test config file
-        println("Time limit: " + appConfig.timeLimit)
+        orchestrator.scrape(args.getOptionValues("try-domain").first())
     }
 
 }

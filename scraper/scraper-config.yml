@@ -1,5 +1,7 @@
 settings:
   timeLimit: 50   #time limit in hours
+  downloaderConfig:
+    filePath: testPath
 
 remoteStorage:
   address: localhost
