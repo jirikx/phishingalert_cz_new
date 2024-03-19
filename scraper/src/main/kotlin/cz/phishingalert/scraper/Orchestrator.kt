@@ -12,7 +12,8 @@ class Orchestrator(
     fun scrape(webDomain: String): Unit {
         //todo: validate domain
 
-        websiteDownloader.makeWhoIsRequest(webDomain)
+        //websiteDownloader.makeWhoIsRequest(webDomain)
+        websiteDownloader.download("idk")
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {

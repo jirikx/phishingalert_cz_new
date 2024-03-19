@@ -1,11 +1,19 @@
 package cz.phishingalert.scraper.downloaders
 
+import crawlercommons.filters.basic.BasicURLNormalizer
 import cz.phishingalert.scraper.AppConfig
 import cz.phishingalert.scraper.checkURL
+import de.hshn.mi.crawler4j.frontier.HSQLDBFrontierConfiguration
+import edu.uci.ics.crawler4j.crawler.CrawlConfig
+import edu.uci.ics.crawler4j.crawler.CrawlController
+import edu.uci.ics.crawler4j.crawler.CrawlController.WebCrawlerFactory
+import edu.uci.ics.crawler4j.fetcher.PageFetcher
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer
 import org.apache.commons.net.whois.WhoisClient
 import org.springframework.stereotype.Component
+import java.io.File
 import java.net.URI
-import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
@@ -13,6 +21,7 @@ import java.time.Duration
 
 private const val WHOIS_PORT = 43
 private const val MAX_REDIRECT_COUNT = 3
+private const val LOCAL_DOWNLOAD_PATH = "/tmp/crawled-content/" //todo: move to config file!
 
 @Component
 class WebsiteDownloader(val appConfig: AppConfig) : Downloader {
@@ -21,6 +30,37 @@ class WebsiteDownloader(val appConfig: AppConfig) : Downloader {
         // find a location where to store the page
         // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io.path/create-temp-file.html
         println("Storing to: ${appConfig.downloaderConfig.filePath}")
+
+
+        // Where to store crawled data
+        val storageFolder = File(LOCAL_DOWNLOAD_PATH)
+        if (!storageFolder.exists())
+            storageFolder.mkdirs()
+
+        // Use the crawler
+        val numberOfCrawlers = 2
+        val config = CrawlConfig()
+        config.crawlStorageFolder = LOCAL_DOWNLOAD_PATH
+        config.maxPagesToFetch = 50
+        config.isIncludeBinaryContentInCrawling = true
+        config.userAgentString = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0"
+
+        // Instantiate the controller
+        val normalizer = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build()
+        val pageFetcher = PageFetcher(config, normalizer)
+        val robotsTxtConfig = RobotstxtConfig()
+        val frontierConfiguration = HSQLDBFrontierConfiguration(config, 10)
+        val robotsTxtServer = RobotstxtServer(robotsTxtConfig, pageFetcher, frontierConfiguration.webURLFactory)
+        val controller = CrawlController(config, normalizer, pageFetcher, robotsTxtServer, frontierConfiguration)
+
+
+
+        // Add seeds for crawler
+        controller.addSeed("https://unblock.pancakeswaapfinance.net/")
+        val factory: WebCrawlerFactory<Crawler> = WebCrawlerFactory<Crawler> { Crawler(storageFolder) }
+
+
+        controller.start(factory, numberOfCrawlers)
 
     }
 
