@@ -12,6 +12,7 @@ import org.xbill.DNS.Record
 import org.xbill.DNS.Type
 import org.xbill.DNS.lookup.LookupResult
 import org.xbill.DNS.lookup.LookupSession
+import java.net.URL
 import java.net.UnknownHostException
 
 
@@ -19,9 +20,9 @@ import java.net.UnknownHostException
 class DnsDownloader(
     val dnsTypes: List<Int> = listOf(Type.A, Type.AAAA, Type.MX, Type.CNAME, Type.NS)
 ) : Downloader {
-    override fun download(domain: String) {
+    override fun download(url: URL) {
         val session = LookupSession.defaultBuilder().build()
-        val domainName = Name.fromString("${domain}.")
+        val domainName = Name.fromString("${url.host}.")
 
         for (type in dnsTypes) {
             session.lookupAsync(domainName, type)

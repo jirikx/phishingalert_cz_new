@@ -22,8 +22,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("commons-net:commons-net:3.10.0")
-    implementation("de.hs-heilbronn.mi:crawler4j-with-hsqldb:5.0.2")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("com.microsoft.playwright:playwright:1.42.0")
+    implementation("dnsjava:dnsjava:3.5.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
 }
