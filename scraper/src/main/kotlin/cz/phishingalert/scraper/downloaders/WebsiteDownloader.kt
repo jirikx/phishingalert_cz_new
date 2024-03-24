@@ -3,7 +3,7 @@ package cz.phishingalert.scraper.downloaders
 import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
-import cz.phishingalert.scraper.AppConfig
+import cz.phishingalert.scraper.configuration.AppConfig
 import cz.phishingalert.scraper.checkURL
 import org.apache.commons.net.whois.WhoisClient
 import org.springframework.stereotype.Component
@@ -21,14 +21,15 @@ private const val MAX_REDIRECT_COUNT = 3
 private const val LOCAL_DOWNLOAD_PATH = "/tmp/crawled-content/" //todo: move to config file!
 
 @Component
-class WebsiteDownloader(val appConfig: AppConfig) : Downloader {
+class WebsiteDownloader(
+    val appConfig: AppConfig,
+    val playwright: Playwright
+) : Downloader {
 
     override fun download(url: URL) {
         // find a location where to store the page
         // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io.path/create-temp-file.html
         println("Storing to: ${appConfig.downloaderConfig.filePath}")
-
-        val playwright = Playwright.create()
         val browser = playwright.chromium().launch()
 
         val page = browser.newPage()

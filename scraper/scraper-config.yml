@@ -2,6 +2,7 @@ settings:
   timeLimit: 50   #time limit in hours
   downloaderConfig:
     filePath: testPath
+    firefoxProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
 
 remoteStorage:
   address: localhost

@@ -7,10 +7,9 @@ import java.io.FileInputStream
 import java.net.URL
 
 @Component
-class ModuleDownloader : Downloader {
+class ModuleDownloader(val playwright: Playwright) : Downloader {
     override fun download(url: URL) {
         // https://github.com/johnmichel/Library-Detector-for-Chrome/blob/master/library/libraries.js
-        val playwright = Playwright.create()
         val browser = playwright.firefox().launch()
 
         val libraries = loadResources("classpath:libraries.js")

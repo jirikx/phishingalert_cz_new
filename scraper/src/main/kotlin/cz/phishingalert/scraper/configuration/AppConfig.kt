@@ -1,7 +1,6 @@
-package cz.phishingalert.scraper
+package cz.phishingalert.scraper.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.NestedConfigurationProperty
 
 @ConfigurationProperties(prefix = "settings")
 data class AppConfig(
@@ -10,5 +9,6 @@ data class AppConfig(
 ) {
     data class DownloaderConfig(
         val filePath: String,
+        val firefoxProfilePath: String
     )
 }
