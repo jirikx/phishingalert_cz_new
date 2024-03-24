@@ -2,7 +2,7 @@ package cz.phishingalert.scraper.domain
 
 import java.util.Date
 
-class SslCertificate(
+data class SslCertificate(
     override var id: String?,
     var version: String?,
     var serialNumber: String?,
@@ -10,7 +10,10 @@ class SslCertificate(
     var issuer: String?,
     var issueDate: Date?,
     var expirationDate: Date?,
+    var subject: String?,
     var publicKey: String?,
-    var authority: String?
+    var issuerId: String?,
+    var subjectId: String?,
+    var signature: String?
 ) : Entity<String> {
 }

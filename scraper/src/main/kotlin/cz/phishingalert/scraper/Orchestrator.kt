@@ -2,6 +2,7 @@ package cz.phishingalert.scraper
 
 import cz.phishingalert.scraper.configuration.AppConfig
 import cz.phishingalert.scraper.crawler.PlaywrightCrawler
+import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
@@ -17,7 +18,8 @@ class Orchestrator(
     private val websiteDownloader: WebsiteDownloader,
     private val dnsDownloader: DnsDownloader,
     private val moduleDownloader: ModuleDownloader,
-    private val crawler: PlaywrightCrawler
+    private val crawler: PlaywrightCrawler,
+    private val certificateDownloader: CertificateDownloader
     //private val exporter: String
 ) {
     fun scrape(rawUrl: String): Unit {
@@ -31,8 +33,9 @@ class Orchestrator(
 //        websiteDownloader.download
 //        dnsDownloader.download(url)
 //        moduleDownloader.download(url)
-
-        crawler.crawl(url, dir)
+//
+//        crawler.crawl(url, dir)
+        certificateDownloader.download(url)
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {
