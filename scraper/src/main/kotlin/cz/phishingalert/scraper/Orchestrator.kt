@@ -34,7 +34,7 @@ class Orchestrator(
 //        dnsDownloader.download(url)
 //        moduleDownloader.download(url)
 //
-//        crawler.crawl(url, dir)
+        crawler.crawl(url, dir)
         certificateDownloader.download(url)
     }
 
