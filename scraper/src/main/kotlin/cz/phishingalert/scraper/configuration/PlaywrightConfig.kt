@@ -13,7 +13,7 @@ class PlaywrightConfig {
 
     @Bean
     fun options(): BrowserType.LaunchPersistentContextOptions {
-        return BrowserType.LaunchPersistentContextOptions().setSlowMo(50.0)
+        return BrowserType.LaunchPersistentContextOptions().setSlowMo(50.0).setAcceptDownloads(true).setHeadless(true)
     }
 }
 

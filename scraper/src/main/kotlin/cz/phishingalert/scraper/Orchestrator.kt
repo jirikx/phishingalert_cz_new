@@ -29,11 +29,10 @@ class Orchestrator(
         val dir = setupDownloadDirectory()
         println("Created tmp directory in ${dir.toUri()}")
 
-//        websiteDownloader.makeWhoIsRequest(url)
-//        websiteDownloader.download
-//        dnsDownloader.download(url)
-//        moduleDownloader.download(url)
-//
+        websiteDownloader.makeWhoIsRequest(url.host)
+        dnsDownloader.download(url)
+        moduleDownloader.download(url)
+
         crawler.crawl(url, dir)
         certificateDownloader.download(url)
     }
