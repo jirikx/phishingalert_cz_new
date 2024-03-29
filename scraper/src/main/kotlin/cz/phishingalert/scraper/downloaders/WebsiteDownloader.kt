@@ -18,18 +18,17 @@ import java.time.Duration
 
 private const val WHOIS_PORT = 43
 private const val MAX_REDIRECT_COUNT = 3
-private const val LOCAL_DOWNLOAD_PATH = "/tmp/crawled-content/" //todo: move to config file!
 
 @Component
 class WebsiteDownloader(
     val appConfig: AppConfig,
     val playwright: Playwright
-) : Downloader {
+) : Downloader() {
 
     override fun download(url: URL) {
         // find a location where to store the page
         // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io.path/create-temp-file.html
-        println("Storing to: ${appConfig.downloaderConfig.filePath}")
+        logger.info("Storing to: ${appConfig.downloaderConfig.filePath}")
         val browser = playwright.chromium().launch()
 
         val page = browser.newPage()
@@ -68,7 +67,7 @@ class WebsiteDownloader(
         }
 
         whoIsClient.disconnect()
-        println(results)
+        logger.info("WhoIs request results:\n$results")
         return true
     }
 
@@ -80,7 +79,7 @@ class WebsiteDownloader(
             .timeout(Duration.ofSeconds(10)).GET().build()
 
         val response = client.send(request, BodyHandlers.ofString())
-        println(response.body())
+        logger.info("RDAP request results${response.body()}")
         return true
     }
 }

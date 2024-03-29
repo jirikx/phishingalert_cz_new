@@ -7,7 +7,7 @@ import java.io.FileInputStream
 import java.net.URL
 
 @Component
-class ModuleDownloader(val playwright: Playwright) : Downloader {
+class ModuleDownloader(val playwright: Playwright) : Downloader() {
     override fun download(url: URL) {
         // https://github.com/johnmichel/Library-Detector-for-Chrome/blob/master/library/libraries.js
         val browser = playwright.firefox().launch()
@@ -25,7 +25,7 @@ class ModuleDownloader(val playwright: Playwright) : Downloader {
             val module = match.groupValues[1]
             val testResult = page.evaluate("d41d8cd98f00b204e9800998ecf8427e_LibraryDetectorTests['$module'].test(window)")
             if (testResult.toString().trimIndent() != "false")
-                println("Found $module with version $testResult")
+                logger.info("Found $module with version $testResult")
         }
 
         // check Angular: https://github.com/rangle/augury/blob/master/src/backend/utils/app-check.ts

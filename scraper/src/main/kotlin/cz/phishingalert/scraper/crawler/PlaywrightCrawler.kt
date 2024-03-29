@@ -1,10 +1,6 @@
 package cz.phishingalert.scraper.crawler
 
-import com.microsoft.playwright.BrowserType
-import com.microsoft.playwright.Download
-import com.microsoft.playwright.Page
-import com.microsoft.playwright.Playwright
-import com.microsoft.playwright.PlaywrightException
+import com.microsoft.playwright.*
 import cz.phishingalert.scraper.createSubDirectory
 import org.springframework.stereotype.Component
 import java.io.File
@@ -33,7 +29,7 @@ class PlaywrightCrawler(
         page.screenshot(Page.ScreenshotOptions()
             .setPath(downloadDir.resolve("screenshot-${UUID.randomUUID()}.png"))
             .setFullPage(true))
-        println("completed screenshot of ${page.url()}")
+        logger.info("Took a screenshot of ${page.url()}")
 
         val queue = ArrayDeque<URI>()
         val alreadyFoundLinks = HashSet<URI>()
@@ -41,14 +37,21 @@ class PlaywrightCrawler(
         queue.add(url.toURI())
         alreadyFoundLinks.add(url.toURI())
 
+        // Setup download events
+        page.onDownload { download: Download ->
+            logger.info("Download event from ${page.url()}")
+            download.saveAs(downloadDir.resolve("file-${UUID.randomUUID()}"))
+        }
+
         while (queue.isNotEmpty()) {
             val current = queue.removeFirst()
-            println("page: $current")
+            logger.info("Page: $current")
 
             try {
                 page.navigate(current.toString())
             } catch (ex: PlaywrightException) {
-                continue    //todo: handle this situation better
+                logger.warn("Problem navigating to $current, ${ex.message}")
+                continue
             }
 
             // Download current webpage
@@ -71,7 +74,7 @@ class PlaywrightCrawler(
             }
         }
 
-        println("downloading finished")
+        logger.info("Crawling of $url has finished")
     }
 
     fun discoverLinks(page: Page, url: URL, allowOutsideDomain: Boolean): List<URI> {
@@ -80,7 +83,7 @@ class PlaywrightCrawler(
             .mapNotNull { fixUri(page.url(), it) }
             .filter {
                 val link = it.path
-                println("$it has host ${it.host}")
+                //logger.info("$it has host ${it.host}")
                 !link.endsWith(".css") && !link.endsWith(".js") && !link.endsWith(".png") &&
                 !link.endsWith(".jpg") && !link.endsWith(".jpeg") && !link.endsWith(".svg") &&
                 !link.endsWith(".gif")

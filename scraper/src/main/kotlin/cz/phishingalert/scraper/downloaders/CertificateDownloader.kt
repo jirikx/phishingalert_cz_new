@@ -10,7 +10,7 @@ import javax.net.ssl.*
 private const val HTTPS_PORT = 443
 
 @Component
-class CertificateDownloader : Downloader {
+class CertificateDownloader : Downloader() {
     override fun download(url: URL) {
         val socketFactory = SSLSocketFactory.getDefault()
         val sslSocket = socketFactory.createSocket(url.host, HTTPS_PORT) as SSLSocket
@@ -21,17 +21,17 @@ class CertificateDownloader : Downloader {
             val certificates = sslSocket.session.peerCertificates.filterIsInstance<X509Certificate>().toTypedArray()
 
             for (cert in certificates) {
-                println(
+                logger.info(
                     SslCertificate(
                         calculateThumbprint(cert), cert.version.toString(), cert.serialNumber.toString(),
                         cert.sigAlgName, cert.issuerX500Principal.toString(), cert.notBefore, cert.notAfter,
                         cert.subjectX500Principal.toString(), cert.publicKey.toString(), cert.issuerUniqueID?.toString(),
                         cert.subjectUniqueID?.toString(), cert.signature.toString()
-                    )
+                    ).toString()
                 )
             }
         } catch (ex: SSLHandshakeException) {
-            println("CertificateDownloader: SSL Handshake failed!")
+            logger.warn("CertificateDownloader: SSL Handshake failed!")
         }
     }
 

@@ -6,6 +6,8 @@ import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.net.URL
 import java.nio.file.Path
@@ -22,12 +24,14 @@ class Orchestrator(
     private val certificateDownloader: CertificateDownloader
     //private val exporter: String
 ) {
+    protected val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     fun scrape(rawUrl: String): Unit {
         //todo: validate domain
         val url = URL(rawUrl)
 
         val dir = setupDownloadDirectory()
-        println("Created tmp directory in ${dir.toUri()}")
+        logger.info("Created tmp directory in ${dir.toUri()}")
 
         websiteDownloader.makeWhoIsRequest(url.host)
         dnsDownloader.download(url)

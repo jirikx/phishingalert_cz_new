@@ -1,5 +1,7 @@
 package cz.phishingalert.scraper.crawler
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URI
@@ -9,6 +11,8 @@ import java.nio.channels.Channels
 import java.nio.file.Path
 
 abstract class Crawler {
+    protected val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     /**
      * Crawl the website starting at given url
      */
@@ -33,7 +37,7 @@ abstract class Crawler {
                     }
                 }
             } catch (ex: IOException) {
-                println(ex.message) //todo: implement logging
+                logger.warn("Problem when downloading from $resourceUrl, ${ex.message}")
             }
         }
 
@@ -67,7 +71,7 @@ abstract class Crawler {
             if (fixed != null)
                 result.add(fixed)
             else
-                println("Website $url contains wrong link $rawUrl")
+                logger.warn("Website $url contains wrong link $rawUrl")
         }
 
         return result
