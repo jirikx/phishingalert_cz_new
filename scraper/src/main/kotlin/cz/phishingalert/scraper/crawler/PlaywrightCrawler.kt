@@ -1,7 +1,7 @@
 package cz.phishingalert.scraper.crawler
 
 import com.microsoft.playwright.*
-import cz.phishingalert.scraper.createSubDirectory
+import cz.phishingalert.scraper.utils.createSubDirectory
 import org.springframework.stereotype.Component
 import java.io.File
 import java.net.URI

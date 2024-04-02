@@ -1,5 +1,7 @@
 settings:
   timeLimit: 50   #time limit in hours
+  defaultWhoIsServer: whois.iana.org
+  defaultRDAPServer: https://rdap.org/domain/
   downloaderConfig:
     filePath: testPath
     firefoxProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
