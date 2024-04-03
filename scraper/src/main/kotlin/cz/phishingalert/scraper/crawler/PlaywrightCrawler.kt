@@ -8,6 +8,7 @@ import java.net.URI
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayDeque
 
@@ -27,7 +28,7 @@ class PlaywrightCrawler(
         val page = browser.newPage()
         page.navigate(url.toString())
         page.screenshot(Page.ScreenshotOptions()
-            .setPath(downloadDir.resolve("screenshot-${UUID.randomUUID()}.png"))
+            .setPath(downloadDir.resolve("screenshot-${LocalDateTime.now()}.png"))
             .setFullPage(true))
         logger.info("Took a screenshot of ${page.url()}")
 
@@ -56,9 +57,9 @@ class PlaywrightCrawler(
 
             // Download current webpage
             downloadHtml(page, downloadDir)
-            downloadJavaScript(page, downloadDir)
-            downloadImages(page, downloadDir)
-            downloadCss(page, downloadDir)
+            downloadJavaScript(page, url, downloadDir)
+            downloadImages(page, url, downloadDir)
+            downloadCss(page, url, downloadDir)
 
             // Stop adding new links if the limit was reached
             if (alreadyFoundLinks.size >= visitedLinksLimit)
@@ -102,26 +103,25 @@ class PlaywrightCrawler(
         }
     }
 
-    fun downloadJavaScript(page: Page, downloadDir: Path) {
+    fun downloadJavaScript(page: Page, url: URL, downloadDir: Path) {
         // Extract all links to JS from the page (without duplicates)
         val jsLinks = page.querySelectorAll("script").mapNotNull { it.getAttribute("src") }.toSet()
 
-
-        downloadFromUris(fixUris(page.url(), jsLinks), createSubDirectory(downloadDir, "js"))
+        downloadFromUris(fixUris(url.toString(), jsLinks), createSubDirectory(downloadDir, "js"))
     }
 
-    fun downloadImages(page: Page, downloadDir: Path) {
+    fun downloadImages(page: Page, url: URL, downloadDir: Path) {
         // Extract all image links from the page (without duplicates)
         val imageLinks = page.querySelectorAll("img").mapNotNull { it.getAttribute("src") }.toSet()
 
-        downloadFromUris(fixUris(page.url(), imageLinks), createSubDirectory(downloadDir, "img"))
+        downloadFromUris(fixUris(url.toString(), imageLinks), createSubDirectory(downloadDir, "img"))
     }
 
-    fun downloadCss(page: Page, downloadDir: Path) {
+    fun downloadCss(page: Page, url: URL, downloadDir: Path) {
         // Extract all links to CSS from the page (without duplicates)
         val cssLinks = page.querySelectorAll("link[rel=\"stylesheet\"]").mapNotNull { it.getAttribute("href") }.toSet()
 
-        downloadFromUris(fixUris(page.url(), cssLinks), createSubDirectory(downloadDir, "css"))
+        downloadFromUris(fixUris(url.toString(), cssLinks), createSubDirectory(downloadDir, "css"))
     }
 
 }

@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.utils
 
-import java.net.MalformedURLException
+import com.google.common.net.InternetDomainName
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
@@ -23,6 +23,17 @@ fun checkURL(url: String, checkProtocol: Boolean = false): Boolean {
         }
     else
         regex.matches(url)
+}
+
+fun toRootDomain(url: String): String {
+    return InternetDomainName.from(url).topPrivateDomain().toString()
+}
+
+fun toHostWithoutWww(url: URL): String {
+    val host = url.host
+    if (host.startsWith("www."))
+        return host.removePrefix("www.")
+    return host
 }
 
 /**

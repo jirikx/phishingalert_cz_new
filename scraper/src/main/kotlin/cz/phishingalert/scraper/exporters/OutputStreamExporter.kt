@@ -1,9 +1,14 @@
 package cz.phishingalert.scraper.exporters
 
-import javax.swing.text.html.parser.Entity
+import cz.phishingalert.scraper.domain.Entity
+import org.springframework.stereotype.Component
 
-class OutputStreamExporter : Exporter<Entity> {
-    override fun export(entity: Entity) {
-        TODO("Not yet implemented")
+/**
+ * Take care of exporting given entities into the output stream (printing them)
+ */
+@Component
+class OutputStreamExporter : Exporter<Entity<*>> {
+    override fun export(entity: Entity<*>) {
+        println(entity)
     }
 }

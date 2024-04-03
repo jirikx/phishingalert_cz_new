@@ -10,8 +10,8 @@ import javax.net.ssl.*
 private const val HTTPS_PORT = 443
 
 @Component
-class CertificateDownloader : Downloader() {
-    override fun download(url: URL) {
+class CertificateDownloader : Downloader<String>() {
+    override fun download(url: URL): List<SslCertificate> {
         val socketFactory = SSLSocketFactory.getDefault()
         val sslSocket = socketFactory.createSocket(url.host, HTTPS_PORT) as SSLSocket
 
@@ -19,19 +19,21 @@ class CertificateDownloader : Downloader() {
         try {
             sslSocket.startHandshake()
             val certificates = sslSocket.session.peerCertificates.filterIsInstance<X509Certificate>().toTypedArray()
-
-            for (cert in certificates) {
-                logger.info(
-                    SslCertificate(
-                        calculateThumbprint(cert), cert.version.toString(), cert.serialNumber.toString(),
-                        cert.sigAlgName, cert.issuerX500Principal.toString(), cert.notBefore, cert.notAfter,
-                        cert.subjectX500Principal.toString(), cert.publicKey.toString(), cert.issuerUniqueID?.toString(),
-                        cert.subjectUniqueID?.toString(), cert.signature.toString()
-                    ).toString()
+            val parsedCertificates = certificates.map {
+                SslCertificate(
+                    calculateThumbprint(it), it.version.toString(), it.serialNumber.toString(),
+                    it.sigAlgName, it.issuerX500Principal.toString(), it.notBefore, it.notAfter,
+                    it.subjectX500Principal.toString(), it.publicKey.toString(), it.issuerUniqueID?.toString(),
+                    it.subjectUniqueID?.toString(), it.signature.toString()
                 )
-            }
+            }.toList()
+
+            return parsedCertificates
         } catch (ex: SSLHandshakeException) {
             logger.warn("CertificateDownloader: SSL Handshake failed!")
+            return emptyList()
+        } finally {
+            sslSocket.close()
         }
     }
 

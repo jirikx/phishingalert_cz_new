@@ -27,6 +27,7 @@ dependencies {
     implementation("com.microsoft.playwright:playwright:1.42.0")
     implementation("dnsjava:dnsjava:3.5.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")
+    implementation("com.google.guava:guava:33.1.0-jre")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation(kotlin("test"))

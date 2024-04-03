@@ -1,11 +1,12 @@
 package cz.phishingalert.scraper.downloaders
 
+import cz.phishingalert.scraper.domain.Entity
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL
 
-abstract class Downloader {
+abstract class Downloader<T> {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    abstract fun download(url: URL): Unit
+    abstract fun download(url: URL): Collection<Entity<T>>
 }

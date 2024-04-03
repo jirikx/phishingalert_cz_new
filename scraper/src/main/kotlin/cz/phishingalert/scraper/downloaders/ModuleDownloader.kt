@@ -1,14 +1,15 @@
 package cz.phishingalert.scraper.downloaders
 
 import com.microsoft.playwright.Playwright
+import cz.phishingalert.scraper.domain.ModuleInfo
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
 import java.io.FileInputStream
 import java.net.URL
 
 @Component
-class ModuleDownloader(val playwright: Playwright) : Downloader() {
-    override fun download(url: URL) {
+class ModuleDownloader(val playwright: Playwright) : Downloader<Int>() {
+    override fun download(url: URL): List<ModuleInfo> {
         // https://github.com/johnmichel/Library-Detector-for-Chrome/blob/master/library/libraries.js
         val browser = playwright.firefox().launch()
 
@@ -21,16 +22,28 @@ class ModuleDownloader(val playwright: Playwright) : Downloader() {
         page.navigate(url.toString())
         page.evaluate(libraries)
 
+        val results = mutableListOf<ModuleInfo>()
         for (match in matches) {
             val module = match.groupValues[1]
             val testResult = page
                 .evaluate("d41d8cd98f00b204e9800998ecf8427e_LibraryDetectorTests['$module'].test(window)")
                 .toString().trimIndent()
-            if (testResult != "false")
+            if (testResult != "false") {
+                results.add(ModuleInfo(
+                    null,
+                    module,
+                    null,
+                    extractVersion(testResult)
+                ))
                 logger.info("Found $module with version ${extractVersion(testResult)}")
+            }
         }
 
+        //todo https://github.com/enthec/webappanalyzer
+        // https://github.com/micmro/Stylify-Me
+
         page.close()
+        return results.toList()
         // check Angular: https://github.com/rangle/augury/blob/master/src/backend/utils/app-check.ts
     }
 

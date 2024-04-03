@@ -5,6 +5,7 @@ import cz.phishingalert.scraper.configuration.AppConfig
 import cz.phishingalert.scraper.domain.Website
 import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
 import cz.phishingalert.scraper.utils.checkURL
+import cz.phishingalert.scraper.utils.toRootDomain
 import org.apache.commons.net.whois.WhoisClient
 import org.springframework.stereotype.Component
 import java.net.URI
@@ -26,15 +27,18 @@ private const val MAX_REDIRECT_COUNT = 3
 class WebsiteDownloader(
     val appConfig: AppConfig,
     val playwright: Playwright
-) : Downloader() {
+) : Downloader<Int>() {
 
-    override fun download(url: URL) {
+    override fun download(url: URL): List<Website> {
         // Try a RDAP request first, and if it fails, fallback to WhoIs
-//        val firstTry = makeRDAPRequest(url.host)
-//        if (firstTry == null)
-//            return makeWhoIsRequest(url.host)
-//
-//        return firstTry
+        val rootDomain = toRootDomain(url.host)
+        var result = makeRDAPRequest(rootDomain)
+        if (result == null) {
+            result = makeWhoIsRequest(rootDomain) ?: return emptyList()
+        }
+
+        result.url = url
+        return listOf(result)
     }
 
     fun makeWhoIsRequest(domain: String): Website? {
@@ -85,6 +89,7 @@ class WebsiteDownloader(
      * Make RDAP request with a HttpClient
      */
     fun makeRDAPRequest(domain: String): Website? {
+        logger.warn("DOMAIN RDAP: $domain")
         val client = HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.ALWAYS).build()
         val request = HttpRequest.newBuilder()

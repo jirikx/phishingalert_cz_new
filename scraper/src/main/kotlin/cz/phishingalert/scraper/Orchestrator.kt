@@ -7,6 +7,7 @@ import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
 import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
+import cz.phishingalert.scraper.exporters.OutputStreamExporter
 import cz.phishingalert.scraper.utils.checkURL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,33 +23,37 @@ class Orchestrator(
     private val dnsDownloader: DnsDownloader,
     private val moduleDownloader: ModuleDownloader,
     private val crawler: PlaywrightCrawler,
-    private val certificateDownloader: CertificateDownloader
-    //private val exporter: String
+    private val certificateDownloader: CertificateDownloader,
+    private val exporter: OutputStreamExporter
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun scrape(rawUrl: String): Unit {
-        //todo: validate domain
        if (!checkURL(rawUrl, true)) {
            logger.error("Can't scrape info from invalid url $rawUrl")
            return
        }
-
         val url = URL(rawUrl)
 
-//        val dir = setupDownloadDirectory()
-//        logger.info("Created tmp directory in ${dir.toUri()}")
-//
-        println(websiteDownloader.makeWhoIsRequest(url.host))
-        println(websiteDownloader.makeRDAPRequest(url.host))
-        return
+        // Setup directory for downloading
+        val dir = setupDownloadDirectory()
+        logger.info("Created tmp directory in ${dir.toUri()}")
 
-//        websiteDownloader.makeRDAPRequest(url.host)
-//        dnsDownloader.download(url)
-//        moduleDownloader.download(url)
-//
-//        crawler.crawl(url, dir)
-//        certificateDownloader.download(url)
+        val websiteInfo = websiteDownloader.download(url)
+        val dnsRecords = dnsDownloader.download(url)
+        val usedModules = moduleDownloader.download(url)
+        val certs = certificateDownloader.download(url)
+
+        for (w in websiteInfo)
+            exporter.export(w)
+        for (d in dnsRecords)
+            exporter.export(d)
+        for (u in usedModules)
+            exporter.export(u)
+        for (c in certs)
+            exporter.export(c)
+
+        crawler.crawl(url, dir)
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {

@@ -1,5 +1,6 @@
 package cz.phishingalert.scraper.downloaders
 import cz.phishingalert.scraper.domain.DnsRecord
+import cz.phishingalert.scraper.utils.toHostWithoutWww
 import org.springframework.stereotype.Component
 import org.xbill.DNS.AAAARecord
 import org.xbill.DNS.ARecord
@@ -12,6 +13,7 @@ import org.xbill.DNS.Record
 import org.xbill.DNS.Type
 import org.xbill.DNS.lookup.LookupResult
 import org.xbill.DNS.lookup.LookupSession
+import java.io.IOException
 import java.net.URL
 import java.net.UnknownHostException
 
@@ -19,26 +21,29 @@ import java.net.UnknownHostException
 @Component
 class DnsDownloader(
     val dnsTypes: List<Int> = listOf(Type.A, Type.AAAA, Type.MX, Type.CNAME, Type.NS)
-) : Downloader() {
-    override fun download(url: URL) {
+) : Downloader<Int>() {
+    override fun download(url: URL): List<DnsRecord> {
         val session = LookupSession.defaultBuilder().build()
-        val domainName = Name.fromString("${url.host}.")
+        val domainName = Name.fromString("${toHostWithoutWww(url)}.")
+        val records = mutableListOf<DnsRecord>()
 
         for (type in dnsTypes) {
             session.lookupAsync(domainName, type)
-                .handle { answers: LookupResult, ex: Throwable? ->
-                    if (ex == null)
+                .handle { answers: LookupResult?, ex: Throwable? ->
+                    if (ex == null && answers != null)
                         for (dnsRecord in answers.records)
-                            handleRecord(dnsRecord)
-                    else
-                        logger.warn(ex.message)
+                            handleRecord(dnsRecord)?.let { records.add(it) }
+                    if (ex != null)
+                        logger.error("Problem with getting results for $domainName of DNS type $type, ${ex.message}")
                 }
                 .toCompletableFuture()
                 .get()
         }
+
+        return records.toList()
     }
 
-    fun handleRecord(rec: Record) {
+    fun handleRecord(rec: Record): DnsRecord? {
         val addressFromName: (Name) -> String = {
             try {
                 Address.getByName(it.toString()).hostAddress
@@ -53,10 +58,9 @@ class DnsDownloader(
             is MXRecord -> DnsRecord(0, rec.target.toString(), Type.MX, addressFromName(rec.target), rec.ttl, rec.priority)
             is CNAMERecord -> DnsRecord(0, rec.target.toString(), Type.CNAME, addressFromName(rec.target), rec.ttl)
             is NSRecord -> DnsRecord(0, rec.target.toString(), Type.NS, Address.getByName(rec.target.toString()).hostAddress, rec.ttl)
-            else -> return
+            else -> return null
         }
 
-        logger.info(res.toString())
-        return
+        return res
     }
 }

@@ -7,7 +7,7 @@ enum class ModuleType(val code: String) {
 data class ModuleInfo(
     override var id: Int?,
     var name: String,
-    var type: String,
-    var version: ModuleType?
+    var type: ModuleType?,
+    var version: String
 ) : Entity<Int> {
 }
