@@ -13,7 +13,13 @@ class PlaywrightConfig {
 
     @Bean
     fun options(): BrowserType.LaunchPersistentContextOptions {
-        return BrowserType.LaunchPersistentContextOptions().setSlowMo(50.0).setAcceptDownloads(true).setHeadless(true)
+        return BrowserType.LaunchPersistentContextOptions()
+            .setSlowMo(50.0)
+            .setAcceptDownloads(true)
+            .setHeadless(true)
+            .setLocale("cs-CZ")
+            .setTimezoneId("Europe/Prague")
+            .setViewportSize(1920, 1080)
     }
 }
 

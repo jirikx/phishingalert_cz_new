@@ -2,9 +2,17 @@ settings:
   timeLimit: 50   #time limit in hours
   defaultWhoIsServer: whois.iana.org
   defaultRDAPServer: https://rdap.org/domain/
-  downloaderConfig:
-    filePath: testPath
-    firefoxProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
+  crawler-config:
+    browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
+    visitedPagesLimit: 10 #Max number of visited websites
+    triesPerPageLimit: 3  #Max number of attempts to navigate one particular URL
+    userAgents:
+      - "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
+      - "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.4; rv:124.0) Gecko/20100101 Firefox/124.0"
+      - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0"
+      - "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
+      - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:123.0) Gecko/20100101 Firefox/123.0"
+      - "Mozilla/5.0 (Windows NT 5.1; rv:123.0) Gecko/20100101 Firefox/123.0"
 
 remoteStorage:
   address: localhost

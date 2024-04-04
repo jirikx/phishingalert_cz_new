@@ -10,7 +10,7 @@ import org.springframework.boot.runApplication
 
 
 @SpringBootApplication
-@EnableConfigurationProperties(AppConfig::class)
+@EnableConfigurationProperties(AppConfig::class, AppConfig.CrawlerConfig::class)
 class ScraperApplication(val orchestrator: Orchestrator) : ApplicationRunner {
     private val logger = LoggerFactory.getLogger(javaClass)
 
