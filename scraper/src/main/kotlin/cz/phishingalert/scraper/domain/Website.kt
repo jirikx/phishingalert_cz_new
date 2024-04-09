@@ -1,5 +1,6 @@
 package cz.phishingalert.scraper.domain
 
+import cz.phishingalert.scraper.domain.converters.RowConverter
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.date
@@ -28,13 +29,3 @@ data class Website(
     var expirationDate: LocalDate = LocalDate.EPOCH,
     var fileSystemPath: String = "unknown"
 ) : Model<Int>
-
-object WebsiteConverter : RowConverter<Website> {
-    override fun rowToRecord(row: ResultRow): Website = Websites.rowToRecord(row)
-}
-
-fun Websites.rowToRecord(row: ResultRow): Website =
-    Website(
-        row[id].value, URL(row[url]), row[domainHolder], row[domainRegistrar], row[country], row[registrationDate],
-        row[lastUpdateDate], row[expirationDate], row[filesystemPath]
-        )

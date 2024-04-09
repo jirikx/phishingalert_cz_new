@@ -1,7 +1,7 @@
 package cz.phishingalert.scraper.repository
 
 import cz.phishingalert.scraper.domain.SslCertificate
-import cz.phishingalert.scraper.domain.SslCertificateConverter
+import cz.phishingalert.scraper.domain.converters.SslCertificateConverter
 import cz.phishingalert.scraper.domain.SslCertificates
 import cz.phishingalert.scraper.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.insertAndGetId

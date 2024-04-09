@@ -1,7 +1,6 @@
 package cz.phishingalert.scraper.domain
 
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
 import java.time.LocalDateTime
 
@@ -37,13 +36,3 @@ data class SslCertificate(
     var signature: String,
     var websiteId: Int? = 0
 ) : Model<Int>
-
-object SslCertificateConverter : RowConverter<SslCertificate> {
-    override fun rowToRecord(row: ResultRow): SslCertificate  = SslCertificates.rowToRecord(row)
-}
-
-fun SslCertificates.rowToRecord(row: ResultRow): SslCertificate =
-    SslCertificate(
-        row[id].value, row[thumbprint], row[version], row[serialNumber], row[signAlgorithm], row[issuer], row[issueDate],
-        row[expirationDate], row[subject], row[publicKey], row[issuerId], row[subjectId], row[signature]
-    )

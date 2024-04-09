@@ -1,7 +1,7 @@
 package cz.phishingalert.scraper.repository
 
 import cz.phishingalert.scraper.domain.ModuleInfo
-import cz.phishingalert.scraper.domain.ModuleInfoConverter
+import cz.phishingalert.scraper.domain.converters.ModuleInfoConverter
 import cz.phishingalert.scraper.domain.ModuleInfos
 import cz.phishingalert.scraper.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.and

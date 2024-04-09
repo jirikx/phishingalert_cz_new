@@ -1,7 +1,6 @@
 package cz.phishingalert.scraper.domain
 
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ResultRow
 
 object DnsRecords : IntIdTable() {
     val name = varchar("name", 30)
@@ -21,10 +20,3 @@ data class DnsRecord(
     var priority: Int? = 0,
     var websiteId: Int = 0
 ) : Model<Int>
-
-object DnsRecordConverter : RowConverter<DnsRecord> {
-    override fun rowToRecord(row: ResultRow): DnsRecord = DnsRecords.rowToRecord(row)
-}
-
-fun DnsRecords.rowToRecord(row: ResultRow): DnsRecord =
-    DnsRecord(row[id].value, row[name], row[type], row[ipAddress], row[timeToLive], row[priority])

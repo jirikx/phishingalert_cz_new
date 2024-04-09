@@ -1,8 +1,8 @@
 package cz.phishingalert.scraper.repository
 
 import cz.phishingalert.scraper.domain.Website
-import cz.phishingalert.scraper.domain.WebsiteConverter
 import cz.phishingalert.scraper.domain.Websites
+import cz.phishingalert.scraper.domain.converters.WebsiteConverter
 import cz.phishingalert.scraper.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository

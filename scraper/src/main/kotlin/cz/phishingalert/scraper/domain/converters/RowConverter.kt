@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.domain
+package cz.phishingalert.scraper.domain.converters
 
 import org.jetbrains.exposed.sql.ResultRow
 
