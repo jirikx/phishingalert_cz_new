@@ -2,8 +2,10 @@ package cz.phishingalert.scraper.utils
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.util.*
 
 object DateParser {
     private val formatter = DateTimeFormatter.ofPattern(
@@ -28,4 +30,12 @@ object DateParser {
             LocalDate.of(1970, 1, 1)   // 00:00:00 1 January 1970
         }
     }
+
+    /**
+     * Convert java.util.Date to java.time.LocalDateTime
+     * Method from https://www.baeldung.com/java-date-to-localdate-and-localdatetime
+     * @return LocalDateTime object equivalent to passed Date
+     */
+    fun toLocalDateTime(date: Date): LocalDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
 }
