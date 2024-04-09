@@ -7,6 +7,7 @@ import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
 import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
+import cz.phishingalert.scraper.exporters.DatabaseExporter
 import cz.phishingalert.scraper.exporters.OutputStreamExporter
 import cz.phishingalert.scraper.repository.WebsiteRepository
 import cz.phishingalert.scraper.utils.checkURL
@@ -19,7 +20,6 @@ import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
 
 @Component
-@Transactional //todo: move to Service layer!
 class Orchestrator(
     private val appConfig: AppConfig,
     private val websiteDownloader: WebsiteDownloader,
@@ -27,7 +27,7 @@ class Orchestrator(
     private val moduleDownloader: ModuleDownloader,
     private val crawler: PlaywrightCrawler,
     private val certificateDownloader: CertificateDownloader,
-    private val exporter: OutputStreamExporter,
+    private val exporter: DatabaseExporter,
     private val websiteRepository: WebsiteRepository
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -44,25 +44,12 @@ class Orchestrator(
         logger.info("Created tmp directory in ${dir.toUri()}")
 
         val websiteInfo = websiteDownloader.download(url)
-        websiteRepository.create(websiteInfo.first())
-        logger.info("Added to repository")
-        val websites = websiteRepository.findAll()
-        for (w in websites)
-            logger.info(w.toString())
-//        val dnsRecords = dnsDownloader.download(url)
-//        val usedModules = moduleDownloader.download(url)
-//        val certs = certificateDownloader.download(url)
-//
-//        for (w in websiteInfo)
-//            exporter.export(w)
-//        for (d in dnsRecords)
-//            exporter.export(d)
-//        for (u in usedModules)
-//            exporter.export(u)
-//        for (c in certs)
-//            exporter.export(c)
-//
+        val dnsRecords = dnsDownloader.download(url)
+        val usedModules = moduleDownloader.download(url)
+        val certs = certificateDownloader.download(url)
+
 //        crawler.crawl(url, dir)
+        exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {

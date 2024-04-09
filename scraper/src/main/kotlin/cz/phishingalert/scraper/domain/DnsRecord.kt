@@ -19,8 +19,11 @@ data class DnsRecord(
     var ipAddress: String,
     var timeToLive: Long?,
     var priority: Int? = 0,
-    var websiteId: Int? = 0
-) : Model<Int> {
+    var websiteId: Int = 0
+) : Model<Int>
+
+object DnsRecordConverter : RowConverter<DnsRecord> {
+    override fun rowToRecord(row: ResultRow): DnsRecord = DnsRecords.rowToRecord(row)
 }
 
 fun DnsRecords.rowToRecord(row: ResultRow): DnsRecord =

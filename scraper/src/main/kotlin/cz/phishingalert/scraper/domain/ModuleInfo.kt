@@ -1,6 +1,7 @@
 package cz.phishingalert.scraper.domain
 
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.ResultRow
 
 object ModuleInfos : IntIdTable() {
     val name = varchar("name", 100)
@@ -15,7 +16,15 @@ enum class ModuleType(val code: String) {
 data class ModuleInfo(
     override var id: Int?,
     var name: String,
-    var type: ModuleType?,
-    var version: String
-) : Model<Int> {
+    var type: ModuleType? = ModuleType.LIBRARY,
+    var version: String,
+) : Model<Int>
+
+object ModuleInfoConverter : RowConverter<ModuleInfo> {
+    override fun rowToRecord(row: ResultRow): ModuleInfo  = ModuleInfos.rowToRecord(row)
 }
+
+fun ModuleInfos.rowToRecord(row: ResultRow): ModuleInfo =
+    ModuleInfo(
+        row[id].value, row[name], row[type], row[version]
+    )

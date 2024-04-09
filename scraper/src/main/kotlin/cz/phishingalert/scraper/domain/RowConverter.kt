@@ -3,8 +3,8 @@ package cz.phishingalert.scraper.domain
 import org.jetbrains.exposed.sql.ResultRow
 
 /**
- * Interface for implementing objects that can be converted from Exposed's ResultRow to a class of the type T
+ * Interface for converting from Exposed's ResultRow to a class of the type MODEL (i.e. Website, DnsRecord, ...)
  */
-interface RowConverter<T> {
-    fun rowToRecord(row: ResultRow): T
+interface RowConverter<MODEL> {
+    fun rowToRecord(row: ResultRow): MODEL
 }

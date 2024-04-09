@@ -1,10 +1,12 @@
 package cz.phishingalert.scraper.domain
 
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
-import java.util.Date
+import java.time.LocalDateTime
 
 object SslCertificates : IntIdTable() {
+    val thumbprint = varchar("thumbprint", 300)
     val version = varchar("version", 30)
     val serialNumber = varchar("serial_number", 30)
     val signAlgorithm = varchar("sign_algorithm", 300)
@@ -13,23 +15,35 @@ object SslCertificates : IntIdTable() {
     val expirationDate = datetime("expiration_date")
     val subject = varchar("subject", 300)
     val publicKey = varchar("public_key", 600)
-    val issuerId = varchar("issuer_id", 300)
-    val subjectId = varchar("subject_id", 300)
+    val issuerId = varchar("issuer_id", 300).nullable()
+    val subjectId = varchar("subject_id", 300).nullable()
     val signature = varchar("signature", 300)
+    val website = reference("website_id", Websites)
 }
 
 data class SslCertificate(
-    override var id: String?,
-    var version: String?,
-    var serialNumber: String?,
-    var signAlgorithm: String?,
-    var issuer: String?,
-    var issueDate: Date?,
-    var expirationDate: Date?,
-    var subject: String?,
-    var publicKey: String?,
+    override var id: Int?,
+    var thumbprint: String,
+    var version: String,
+    var serialNumber: String,
+    var signAlgorithm: String,
+    var issuer: String,
+    var issueDate: LocalDateTime,
+    var expirationDate: LocalDateTime,
+    var subject: String,
+    var publicKey: String,
     var issuerId: String?,
     var subjectId: String?,
-    var signature: String?
-) : Model<String> {
+    var signature: String,
+    var websiteId: Int? = 0
+) : Model<Int>
+
+object SslCertificateConverter : RowConverter<SslCertificate> {
+    override fun rowToRecord(row: ResultRow): SslCertificate  = SslCertificates.rowToRecord(row)
 }
+
+fun SslCertificates.rowToRecord(row: ResultRow): SslCertificate =
+    SslCertificate(
+        row[id].value, row[thumbprint], row[version], row[serialNumber], row[signAlgorithm], row[issuer], row[issueDate],
+        row[expirationDate], row[subject], row[publicKey], row[issuerId], row[subjectId], row[signature]
+    )

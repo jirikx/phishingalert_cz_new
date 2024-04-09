@@ -2,6 +2,7 @@ package cz.phishingalert.scraper.downloaders
 
 import com.microsoft.playwright.Playwright
 import cz.phishingalert.scraper.domain.ModuleInfo
+import cz.phishingalert.scraper.domain.ModuleType
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
 import java.io.FileInputStream
@@ -32,7 +33,7 @@ class ModuleDownloader(val playwright: Playwright) : Downloader<Int>() {
                 results.add(ModuleInfo(
                     null,
                     module,
-                    null,
+                    ModuleType.LIBRARY,
                     extractVersion(testResult)
                 ))
                 logger.info("Found $module with version ${extractVersion(testResult)}")

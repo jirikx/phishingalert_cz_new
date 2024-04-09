@@ -27,14 +27,7 @@ data class Website(
     var lastUpdateDate: LocalDate = LocalDate.EPOCH,
     var expirationDate: LocalDate = LocalDate.EPOCH,
     var fileSystemPath: String = "unknown"
-) : Model<Int> {
-//        fun isValid(): Boolean {
-//            return listOf(
-//                this.id, this.url, this.domainHolder, this.domainRegistrar, this.country,
-//                this.registrationDate, this.lastUpdateDate, this.expirationDate,
-//                this.fileSystemPath).all{it != null}
-//        }
-}
+) : Model<Int>
 
 object WebsiteConverter : RowConverter<Website> {
     override fun rowToRecord(row: ResultRow): Website = Websites.rowToRecord(row)
