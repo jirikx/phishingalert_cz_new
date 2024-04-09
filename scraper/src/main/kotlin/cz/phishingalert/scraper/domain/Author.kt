@@ -6,4 +6,4 @@ class Author(
     var email: String?,
     var userAgent: String?,
     var ipAddress: String?
-) : Entity<Int>
+) : Model<Int>

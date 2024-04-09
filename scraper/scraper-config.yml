@@ -18,3 +18,13 @@ remoteStorage:
   address: localhost
   port: 22
   path: /path/to/directory
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  exposed:
+    generate-ddl: true
+    show-sql: true

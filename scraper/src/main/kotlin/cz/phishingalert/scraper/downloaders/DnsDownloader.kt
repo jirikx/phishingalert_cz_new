@@ -13,7 +13,6 @@ import org.xbill.DNS.Record
 import org.xbill.DNS.Type
 import org.xbill.DNS.lookup.LookupResult
 import org.xbill.DNS.lookup.LookupSession
-import java.io.IOException
 import java.net.URL
 import java.net.UnknownHostException
 

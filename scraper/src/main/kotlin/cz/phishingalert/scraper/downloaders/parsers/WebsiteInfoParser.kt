@@ -37,8 +37,7 @@ object WebsiteInfoParser {
             (country?.groups?.get(1)?.value ?: "unknown"),
             DateParser.parse(registered?.groups?.get(1)?.value),
             DateParser.parse(updated?.groups?.get(1)?.value),
-            DateParser.parse(expires?.groups?.get(1)?.value),
-            null
+            DateParser.parse(expires?.groups?.get(1)?.value)
         )
 
         return website

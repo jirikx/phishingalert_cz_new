@@ -9,5 +9,5 @@ class PhishingAccident(
     var noteText: String?,
     var sourceEmail: String?,
     var sourcePhoneNumber: String?
-) : Entity<Int> {
+) : Model<Int> {
 }
