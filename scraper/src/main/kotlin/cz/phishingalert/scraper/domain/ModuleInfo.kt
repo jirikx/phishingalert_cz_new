@@ -6,6 +6,10 @@ object ModuleInfos : IntIdTable() {
     val name = varchar("name", 100)
     val type = enumeration("type", ModuleType::class) //ModuleType?,
     val version = varchar("version", 30)
+
+    init {
+        uniqueIndex(name, type, version)
+    }
 }
 
 enum class ModuleType(val code: String) {
