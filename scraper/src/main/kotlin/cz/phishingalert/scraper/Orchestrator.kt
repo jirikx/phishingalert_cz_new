@@ -27,8 +27,7 @@ class Orchestrator(
     private val moduleDownloader: ModuleDownloader,
     private val crawler: PlaywrightCrawler,
     private val certificateDownloader: CertificateDownloader,
-    private val exporter: DatabaseExporter,
-    private val websiteRepository: WebsiteRepository
+    private val exporter: DatabaseExporter
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 

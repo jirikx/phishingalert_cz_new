@@ -8,5 +8,5 @@ import java.net.URL
 abstract class Downloader<T> {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    abstract fun download(url: URL): Collection<Model<T>>
+    abstract fun download(url: URL): Collection<T>
 }

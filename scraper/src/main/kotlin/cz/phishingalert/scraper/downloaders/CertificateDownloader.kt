@@ -11,7 +11,7 @@ import javax.net.ssl.*
 private const val HTTPS_PORT = 443
 
 @Component
-class CertificateDownloader : Downloader<Int>() {
+class CertificateDownloader : Downloader<SslCertificate>() {
     override fun download(url: URL): List<SslCertificate> {
         val socketFactory = SSLSocketFactory.getDefault()
         val sslSocket = socketFactory.createSocket(url.host, HTTPS_PORT) as SSLSocket

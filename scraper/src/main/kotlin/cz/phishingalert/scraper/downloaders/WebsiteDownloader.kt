@@ -27,7 +27,7 @@ private const val MAX_REDIRECT_COUNT = 3
 class WebsiteDownloader(
     val appConfig: AppConfig,
     val playwright: Playwright
-) : Downloader<Int>() {
+) : Downloader<Website>() {
 
     override fun download(url: URL): List<Website> {
         // Try a RDAP request first, and if it fails, fallback to WhoIs

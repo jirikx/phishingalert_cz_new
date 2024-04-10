@@ -20,7 +20,7 @@ import java.net.UnknownHostException
 @Component
 class DnsDownloader(
     val dnsTypes: List<Int> = listOf(Type.A, Type.AAAA, Type.MX, Type.CNAME, Type.NS)
-) : Downloader<Int>() {
+) : Downloader<DnsRecord>() {
     override fun download(url: URL): List<DnsRecord> {
         val session = LookupSession.defaultBuilder().build()
         val domainName = Name.fromString("${toHostWithoutWww(url)}.")
