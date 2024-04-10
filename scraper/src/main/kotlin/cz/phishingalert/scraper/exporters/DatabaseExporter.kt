@@ -6,7 +6,6 @@ import cz.phishingalert.scraper.repository.ModuleInfoRepository
 import cz.phishingalert.scraper.repository.SslCertificateRepository
 import cz.phishingalert.scraper.repository.WebsiteRepository
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

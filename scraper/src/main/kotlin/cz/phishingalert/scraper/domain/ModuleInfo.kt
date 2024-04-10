@@ -19,6 +19,6 @@ enum class ModuleType(val code: String) {
 data class ModuleInfo(
     override var id: Int?,
     var name: String,
-    var type: ModuleType? = ModuleType.LIBRARY,
+    var type: ModuleType = ModuleType.LIBRARY,
     var version: String,
 ) : Model<Int>

@@ -12,21 +12,29 @@ import org.springframework.stereotype.Repository
 @Repository
 class ModuleInfoRepository : IntTableRepository<ModuleInfo, ModuleInfos>(ModuleInfos, ModuleInfoConverter) {
     override fun create(entity: ModuleInfo): ModuleInfo {
+        // Don't create anything if the entity already exists
+        if (find(entity) != null)
+            throw IllegalArgumentException("Can't create duplicity row in ModuleInfos table!")
+
         entity.id = table.insertAndGetId {
             it[name] = entity.name
-            it[type] = entity.type!!
+            it[type] = entity.type
             it[version] = entity.version
         }.value
         return entity
     }
 
-    fun findByNameAndVersion(name: String, version: String): List<ModuleInfo> {
+    /**
+     * Try to find already existing entity
+     */
+    fun find(entity: ModuleInfo): ModuleInfo? {
         val row = table.selectAll().where {
-            (table.name eq name) and (table.version eq version)
+            (table.name eq entity.name) and (table.type eq entity.type) and (table.version eq entity.version)
         }.toList()
+
         return if (row.isNotEmpty())
-            row.map { converter.rowToRecord(it) }
+            ModuleInfoConverter.rowToRecord(row.first())
         else
-            emptyList()
+            null
     }
 }

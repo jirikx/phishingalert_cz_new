@@ -6,7 +6,7 @@ package cz.phishingalert.scraper.repository.generic
 interface CrudRepository<MODEL, ID> {
     /**
      * Create the row from given model
-     * @return the created model
+     * @return the created model, null if it couldn't be created
      */
     fun create(entity: MODEL): MODEL
 
