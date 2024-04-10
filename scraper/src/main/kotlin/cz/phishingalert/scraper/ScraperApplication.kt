@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import something.SharedClass
 
 
 @SpringBootApplication
@@ -47,6 +48,7 @@ class ScraperApplication(val orchestrator: Orchestrator) : ApplicationRunner {
 //        }
 
         orchestrator.scrape(args.getOptionValues("try-domain").first())
+        SharedClass().sayHello()
     }
 
 }
