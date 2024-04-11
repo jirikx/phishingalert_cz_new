@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders
 
-import cz.phishingalert.scraper.domain.Model
+import cz.phishingalert.common.domain.Model
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL

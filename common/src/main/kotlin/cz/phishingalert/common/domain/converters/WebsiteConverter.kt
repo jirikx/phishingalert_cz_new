@@ -1,7 +1,7 @@
-package cz.phishingalert.scraper.domain.converters
+package cz.phishingalert.common.domain.converters
 
-import cz.phishingalert.scraper.domain.Website
-import cz.phishingalert.scraper.domain.Websites
+import cz.phishingalert.common.domain.Website
+import cz.phishingalert.common.domain.Websites
 import org.jetbrains.exposed.sql.ResultRow
 import java.net.URL
 

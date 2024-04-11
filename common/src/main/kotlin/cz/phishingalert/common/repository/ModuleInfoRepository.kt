@@ -1,9 +1,9 @@
-package cz.phishingalert.scraper.repository
+package cz.phishingalert.common.repository
 
-import cz.phishingalert.scraper.domain.ModuleInfo
-import cz.phishingalert.scraper.domain.converters.ModuleInfoConverter
-import cz.phishingalert.scraper.domain.ModuleInfos
-import cz.phishingalert.scraper.repository.generic.IntTableRepository
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.converters.ModuleInfoConverter
+import cz.phishingalert.common.domain.ModuleInfos
+import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll

@@ -22,6 +22,7 @@ repositories {
 dependencies {
     implementation(project(":common"))
     implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("io.spring.gradle:dependency-management-plugin:1.1.4")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("commons-net:commons-net:3.10.0")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -35,6 +36,12 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation(kotlin("test"))
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
 }
 
 tasks.withType<KotlinCompile> {

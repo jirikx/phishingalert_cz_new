@@ -1,7 +1,7 @@
-package cz.phishingalert.scraper.domain.converters
+package cz.phishingalert.common.domain.converters
 
-import cz.phishingalert.scraper.domain.DnsRecord
-import cz.phishingalert.scraper.domain.DnsRecords
+import cz.phishingalert.common.domain.DnsRecord
+import cz.phishingalert.common.domain.DnsRecords
 import org.jetbrains.exposed.sql.ResultRow
 
 object DnsRecordConverter : RowConverter<DnsRecord> {

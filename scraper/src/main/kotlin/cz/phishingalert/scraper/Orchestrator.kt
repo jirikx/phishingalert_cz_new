@@ -6,15 +6,11 @@ import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
-import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
 import cz.phishingalert.scraper.exporters.DatabaseExporter
-import cz.phishingalert.scraper.exporters.OutputStreamExporter
-import cz.phishingalert.scraper.repository.WebsiteRepository
 import cz.phishingalert.scraper.utils.checkURL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
@@ -47,7 +43,7 @@ class Orchestrator(
         val usedModules = moduleDownloader.download(url)
         val certs = certificateDownloader.download(url)
 
-//        crawler.crawl(url, dir)
+        crawler.crawl(url, dir)
         exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
     }
 

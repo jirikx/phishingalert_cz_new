@@ -1,7 +1,7 @@
-package cz.phishingalert.scraper.domain.converters
+package cz.phishingalert.common.domain.converters
 
-import cz.phishingalert.scraper.domain.SslCertificate
-import cz.phishingalert.scraper.domain.SslCertificates
+import cz.phishingalert.common.domain.SslCertificate
+import cz.phishingalert.common.domain.SslCertificates
 import org.jetbrains.exposed.sql.ResultRow
 
 object SslCertificateConverter : RowConverter<SslCertificate> {

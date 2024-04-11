@@ -1,9 +1,9 @@
 package cz.phishingalert.scraper.exporters
 
-import cz.phishingalert.scraper.domain.DnsRecord
-import cz.phishingalert.scraper.domain.ModuleInfo
-import cz.phishingalert.scraper.domain.SslCertificate
-import cz.phishingalert.scraper.domain.Website
+import cz.phishingalert.common.domain.DnsRecord
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.SslCertificate
+import cz.phishingalert.common.domain.Website
 
 /**
  * Take care of exporting given entities to some destination

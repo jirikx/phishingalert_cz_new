@@ -1,9 +1,9 @@
-package cz.phishingalert.scraper.repository
+package cz.phishingalert.common.repository
 
-import cz.phishingalert.scraper.domain.SslCertificate
-import cz.phishingalert.scraper.domain.converters.SslCertificateConverter
-import cz.phishingalert.scraper.domain.SslCertificates
-import cz.phishingalert.scraper.repository.generic.IntTableRepository
+import cz.phishingalert.common.domain.SslCertificate
+import cz.phishingalert.common.domain.converters.SslCertificateConverter
+import cz.phishingalert.common.domain.SslCertificates
+import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.springframework.stereotype.Repository
 

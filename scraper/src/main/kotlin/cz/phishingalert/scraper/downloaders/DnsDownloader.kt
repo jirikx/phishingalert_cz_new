@@ -1,5 +1,5 @@
 package cz.phishingalert.scraper.downloaders
-import cz.phishingalert.scraper.domain.DnsRecord
+import cz.phishingalert.common.domain.DnsRecord
 import cz.phishingalert.scraper.utils.toHostWithoutWww
 import org.springframework.stereotype.Component
 import org.xbill.DNS.AAAARecord

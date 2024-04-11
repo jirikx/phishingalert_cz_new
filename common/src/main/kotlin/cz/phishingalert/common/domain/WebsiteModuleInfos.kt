@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.domain
+package cz.phishingalert.common.domain
 
 import org.jetbrains.exposed.sql.Table
 

@@ -1,9 +1,9 @@
-package cz.phishingalert.scraper.repository
+package cz.phishingalert.common.repository
 
-import cz.phishingalert.scraper.domain.DnsRecord
-import cz.phishingalert.scraper.domain.converters.DnsRecordConverter
-import cz.phishingalert.scraper.domain.DnsRecords
-import cz.phishingalert.scraper.repository.generic.IntTableRepository
+import cz.phishingalert.common.domain.DnsRecord
+import cz.phishingalert.common.domain.converters.DnsRecordConverter
+import cz.phishingalert.common.domain.DnsRecords
+import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.springframework.stereotype.Repository
 

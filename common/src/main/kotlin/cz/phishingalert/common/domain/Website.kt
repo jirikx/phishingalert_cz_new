@@ -1,6 +1,6 @@
-package cz.phishingalert.scraper.domain
+package cz.phishingalert.common.domain
 
-import cz.phishingalert.scraper.domain.converters.RowConverter
+import cz.phishingalert.common.domain.converters.RowConverter
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.date

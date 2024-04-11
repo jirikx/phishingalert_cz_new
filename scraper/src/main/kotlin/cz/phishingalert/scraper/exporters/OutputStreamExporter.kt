@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.exporters
 
-import cz.phishingalert.scraper.domain.*
+import cz.phishingalert.common.domain.*
 import org.springframework.stereotype.Component
 
 /**

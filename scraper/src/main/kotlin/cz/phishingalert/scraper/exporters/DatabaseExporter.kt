@@ -1,10 +1,12 @@
 package cz.phishingalert.scraper.exporters
 
-import cz.phishingalert.scraper.domain.*
-import cz.phishingalert.scraper.repository.DnsRecordRepository
-import cz.phishingalert.scraper.repository.ModuleInfoRepository
-import cz.phishingalert.scraper.repository.SslCertificateRepository
-import cz.phishingalert.scraper.repository.WebsiteRepository
+import cz.phishingalert.common.domain.*
+import cz.phishingalert.common.repository.DnsRecordRepository
+import cz.phishingalert.common.repository.ModuleInfoRepository
+import cz.phishingalert.common.repository.SslCertificateRepository
+import cz.phishingalert.common.repository.WebsiteRepository
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -26,6 +28,7 @@ class DatabaseExporter(
         modules: Collection<ModuleInfo>,
         certs: Collection<SslCertificate>
     ) {
+        createTablesIfNotExist()
         val insertedWebsite = websiteRepository.create(website)
 
         for (dnsRecord in dnsRecords) {
@@ -47,5 +50,23 @@ class DatabaseExporter(
             sslCertificateRepository.create(cert)
         }
 
+    }
+
+    /**
+     * Create the database tables if they don't exist.
+     * This function needs to be used because Exposed library only scans tables in current module by default
+     * and so it doesn't create tables from different Gradle modules.
+     */
+    fun createTablesIfNotExist() {
+        if (!Websites.exists())
+            SchemaUtils.create(Websites)
+        if ((!DnsRecords.exists()))
+            SchemaUtils.create(DnsRecords)
+        if(!ModuleInfos.exists())
+            SchemaUtils.create(ModuleInfos)
+        if (!SslCertificates.exists())
+            SchemaUtils.create(SslCertificates)
+        if (!WebsiteModuleInfos.exists())
+            SchemaUtils.create(WebsiteModuleInfos)
     }
 }

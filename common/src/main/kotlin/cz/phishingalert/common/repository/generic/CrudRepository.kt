@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.repository.generic
+package cz.phishingalert.common.repository.generic
 
 /**
  * Interface for repository performing basic database operations

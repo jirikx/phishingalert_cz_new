@@ -26,5 +26,6 @@ spring:
     username: sa
     password: password
   exposed:
-    generate-ddl: true
     show-sql: true
+
+surname: jirik

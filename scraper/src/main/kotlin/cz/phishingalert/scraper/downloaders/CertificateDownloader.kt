@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders
 
-import cz.phishingalert.scraper.domain.SslCertificate
+import cz.phishingalert.common.domain.SslCertificate
 import cz.phishingalert.scraper.utils.DateParser
 import org.springframework.stereotype.Component
 import java.net.URL

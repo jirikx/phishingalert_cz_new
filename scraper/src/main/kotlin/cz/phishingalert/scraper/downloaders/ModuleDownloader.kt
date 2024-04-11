@@ -1,8 +1,8 @@
 package cz.phishingalert.scraper.downloaders
 
 import com.microsoft.playwright.Playwright
-import cz.phishingalert.scraper.domain.ModuleInfo
-import cz.phishingalert.scraper.domain.ModuleType
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.ModuleType
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
 import java.io.FileInputStream

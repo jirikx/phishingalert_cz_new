@@ -1,7 +1,7 @@
-package cz.phishingalert.scraper.repository.generic
+package cz.phishingalert.common.repository.generic
 
-import cz.phishingalert.scraper.domain.Model
-import cz.phishingalert.scraper.domain.converters.RowConverter
+import cz.phishingalert.common.domain.Model
+import cz.phishingalert.common.domain.converters.RowConverter
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.*

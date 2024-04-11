@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders.parsers
 
-import cz.phishingalert.scraper.domain.Website
+import cz.phishingalert.common.domain.Website
 import cz.phishingalert.scraper.downloaders.parsers.rdap.Entity
 import cz.phishingalert.scraper.downloaders.parsers.rdap.Event
 import cz.phishingalert.scraper.utils.DateParser

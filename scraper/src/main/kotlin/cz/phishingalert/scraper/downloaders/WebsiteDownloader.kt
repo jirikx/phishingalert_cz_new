@@ -2,7 +2,7 @@ package cz.phishingalert.scraper.downloaders
 
 import com.microsoft.playwright.Playwright
 import cz.phishingalert.scraper.configuration.AppConfig
-import cz.phishingalert.scraper.domain.Website
+import cz.phishingalert.common.domain.Website
 import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
 import cz.phishingalert.scraper.utils.checkURL
 import cz.phishingalert.scraper.utils.toRootDomain

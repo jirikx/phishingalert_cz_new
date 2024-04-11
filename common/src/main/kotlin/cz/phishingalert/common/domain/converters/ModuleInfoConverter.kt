@@ -1,7 +1,7 @@
-package cz.phishingalert.scraper.domain.converters
+package cz.phishingalert.common.domain.converters
 
-import cz.phishingalert.scraper.domain.ModuleInfo
-import cz.phishingalert.scraper.domain.ModuleInfos
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.ModuleInfos
 import org.jetbrains.exposed.sql.ResultRow
 
 object ModuleInfoConverter : RowConverter<ModuleInfo> {
