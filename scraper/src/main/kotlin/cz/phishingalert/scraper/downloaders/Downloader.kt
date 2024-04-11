@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders
 
-import cz.phishingalert.scraper.domain.Entity
+import cz.phishingalert.common.domain.Model
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -8,5 +8,5 @@ import java.net.URL
 abstract class Downloader<T> {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    abstract fun download(url: URL): Collection<Entity<T>>
+    abstract fun download(url: URL): Collection<T>
 }

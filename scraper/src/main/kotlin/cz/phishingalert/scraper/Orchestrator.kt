@@ -1,13 +1,12 @@
 package cz.phishingalert.scraper
 
 import cz.phishingalert.scraper.configuration.AppConfig
-import cz.phishingalert.scraper.crawler.PlaywrightCrawler
+import cz.phishingalert.scraper.crawler.playwright.PlaywrightCrawler
 import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
-import cz.phishingalert.scraper.downloaders.parsers.WebsiteInfoParser
-import cz.phishingalert.scraper.exporters.OutputStreamExporter
+import cz.phishingalert.scraper.exporters.DatabaseExporter
 import cz.phishingalert.scraper.utils.checkURL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,7 +23,7 @@ class Orchestrator(
     private val moduleDownloader: ModuleDownloader,
     private val crawler: PlaywrightCrawler,
     private val certificateDownloader: CertificateDownloader,
-    private val exporter: OutputStreamExporter
+    private val exporter: DatabaseExporter
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -44,16 +43,8 @@ class Orchestrator(
         val usedModules = moduleDownloader.download(url)
         val certs = certificateDownloader.download(url)
 
-        for (w in websiteInfo)
-            exporter.export(w)
-        for (d in dnsRecords)
-            exporter.export(d)
-        for (u in usedModules)
-            exporter.export(u)
-        for (c in certs)
-            exporter.export(c)
-
         crawler.crawl(url, dir)
+        exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {

@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.domain
+package cz.phishingalert.common.domain
 
 class Author(
     override var id: Int?,
@@ -6,4 +6,4 @@ class Author(
     var email: String?,
     var userAgent: String?,
     var ipAddress: String?
-) : Entity<Int>
+) : Model<Int>

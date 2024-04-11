@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.domain
+package cz.phishingalert.common.domain
 
 import java.util.*
 
@@ -9,5 +9,5 @@ class PhishingAccident(
     var noteText: String?,
     var sourceEmail: String?,
     var sourcePhoneNumber: String?
-) : Entity<Int> {
+) : Model<Int> {
 }

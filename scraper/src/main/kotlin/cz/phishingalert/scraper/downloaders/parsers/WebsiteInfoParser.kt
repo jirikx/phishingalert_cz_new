@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders.parsers
 
-import cz.phishingalert.scraper.domain.Website
+import cz.phishingalert.common.domain.Website
 import cz.phishingalert.scraper.downloaders.parsers.rdap.Entity
 import cz.phishingalert.scraper.downloaders.parsers.rdap.Event
 import cz.phishingalert.scraper.utils.DateParser
@@ -37,8 +37,7 @@ object WebsiteInfoParser {
             (country?.groups?.get(1)?.value ?: "unknown"),
             DateParser.parse(registered?.groups?.get(1)?.value),
             DateParser.parse(updated?.groups?.get(1)?.value),
-            DateParser.parse(expires?.groups?.get(1)?.value),
-            null
+            DateParser.parse(expires?.groups?.get(1)?.value)
         )
 
         return website

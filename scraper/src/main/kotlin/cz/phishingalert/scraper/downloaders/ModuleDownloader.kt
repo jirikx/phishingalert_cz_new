@@ -1,14 +1,15 @@
 package cz.phishingalert.scraper.downloaders
 
 import com.microsoft.playwright.Playwright
-import cz.phishingalert.scraper.domain.ModuleInfo
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.ModuleType
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
 import java.io.FileInputStream
 import java.net.URL
 
 @Component
-class ModuleDownloader(val playwright: Playwright) : Downloader<Int>() {
+class ModuleDownloader(val playwright: Playwright) : Downloader<ModuleInfo>() {
     override fun download(url: URL): List<ModuleInfo> {
         // https://github.com/johnmichel/Library-Detector-for-Chrome/blob/master/library/libraries.js
         val browser = playwright.firefox().launch()
@@ -30,9 +31,9 @@ class ModuleDownloader(val playwright: Playwright) : Downloader<Int>() {
                 .toString().trimIndent()
             if (testResult != "false") {
                 results.add(ModuleInfo(
-                    null,
+                    0,
                     module,
-                    null,
+                    ModuleType.LIBRARY,
                     extractVersion(testResult)
                 ))
                 logger.info("Found $module with version ${extractVersion(testResult)}")

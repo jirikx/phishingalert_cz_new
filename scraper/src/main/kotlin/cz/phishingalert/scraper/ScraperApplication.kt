@@ -8,8 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
-
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["cz.phishingalert"])
 @EnableConfigurationProperties(AppConfig::class, AppConfig.CrawlerConfig::class)
 class ScraperApplication(val orchestrator: Orchestrator) : ApplicationRunner {
     private val logger = LoggerFactory.getLogger(javaClass)

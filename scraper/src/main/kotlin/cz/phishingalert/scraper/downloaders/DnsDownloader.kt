@@ -1,5 +1,5 @@
 package cz.phishingalert.scraper.downloaders
-import cz.phishingalert.scraper.domain.DnsRecord
+import cz.phishingalert.common.domain.DnsRecord
 import cz.phishingalert.scraper.utils.toHostWithoutWww
 import org.springframework.stereotype.Component
 import org.xbill.DNS.AAAARecord
@@ -13,7 +13,6 @@ import org.xbill.DNS.Record
 import org.xbill.DNS.Type
 import org.xbill.DNS.lookup.LookupResult
 import org.xbill.DNS.lookup.LookupSession
-import java.io.IOException
 import java.net.URL
 import java.net.UnknownHostException
 
@@ -21,7 +20,7 @@ import java.net.UnknownHostException
 @Component
 class DnsDownloader(
     val dnsTypes: List<Int> = listOf(Type.A, Type.AAAA, Type.MX, Type.CNAME, Type.NS)
-) : Downloader<Int>() {
+) : Downloader<DnsRecord>() {
     override fun download(url: URL): List<DnsRecord> {
         val session = LookupSession.defaultBuilder().build()
         val domainName = Name.fromString("${toHostWithoutWww(url)}.")
