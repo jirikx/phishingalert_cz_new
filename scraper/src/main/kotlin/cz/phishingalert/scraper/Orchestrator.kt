@@ -1,7 +1,7 @@
 package cz.phishingalert.scraper
 
 import cz.phishingalert.scraper.configuration.AppConfig
-import cz.phishingalert.scraper.crawler.PlaywrightCrawler
+import cz.phishingalert.scraper.crawler.playwright.PlaywrightCrawler
 import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
