@@ -6,14 +6,14 @@ import java.time.LocalDateTime
 
 object SslCertificates : IntIdTable() {
     val thumbprint = varchar("thumbprint", 300)
-    val version = varchar("version", 30)
-    val serialNumber = varchar("serial_number", 30)
+    val version = integer("version")
+    val serialNumber = varchar("serial_number", 100)
     val signAlgorithm = varchar("sign_algorithm", 300)
     val issuer = varchar("issuer", 300)
     val issueDate = datetime("issue_date")
     val expirationDate = datetime("expiration_date")
     val subject = varchar("subject", 300)
-    val publicKey = varchar("public_key", 600)
+    val publicKey = varchar("public_key", 3000)
     val issuerId = varchar("issuer_id", 300).nullable()
     val subjectId = varchar("subject_id", 300).nullable()
     val signature = varchar("signature", 300)
@@ -23,7 +23,7 @@ object SslCertificates : IntIdTable() {
 data class SslCertificate(
     override var id: Int?,
     var thumbprint: String,
-    var version: String,
+    var version: Int,
     var serialNumber: String,
     var signAlgorithm: String,
     var issuer: String,
@@ -34,5 +34,5 @@ data class SslCertificate(
     var issuerId: String?,
     var subjectId: String?,
     var signature: String,
-    var websiteId: Int? = 0
+    var websiteId: Int = 0
 ) : Model<Int>

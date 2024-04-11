@@ -12,18 +12,19 @@ class SslCertificateRepository :
     IntTableRepository<SslCertificate, SslCertificates>(SslCertificates, SslCertificateConverter) {
     override fun create(entity: SslCertificate): SslCertificate {
         entity.id = table.insertAndGetId {
-            it[thumbprint]
-            it[version]
-            it[serialNumber]
-            it[signAlgorithm]
-            it[issuer]
-            it[issueDate]
-            it[expirationDate]
-            it[subject]
-            it[publicKey]
-            it[issuerId]
-            it[subjectId]
-            it[signature]
+            it[thumbprint] = entity.thumbprint
+            it[version] = entity.version
+            it[serialNumber] = entity.serialNumber
+            it[signAlgorithm] = entity.signAlgorithm
+            it[issuer] = entity.issuer
+            it[issueDate] = entity.issueDate
+            it[expirationDate] = entity.expirationDate
+            it[subject] = entity.subject
+            it[publicKey] = entity.publicKey
+            it[issuerId] = entity.issuerId
+            it[subjectId] = entity.subjectId
+            it[signature] = entity.signature
+            it[website] = entity.websiteId!!
         }.value
         return entity
     }

@@ -22,7 +22,7 @@ class CertificateDownloader : Downloader<SslCertificate>() {
             val certificates = sslSocket.session.peerCertificates.filterIsInstance<X509Certificate>().toTypedArray()
             val parsedCertificates = certificates.map {
                 SslCertificate(
-                    0, calculateThumbprint(it), it.version.toString(), it.serialNumber.toString(),
+                    0, calculateThumbprint(it), it.version, it.serialNumber.toString(),
                     it.sigAlgName, it.issuerX500Principal.toString(), DateParser.toLocalDateTime(it.notBefore),
                     DateParser.toLocalDateTime(it.notAfter), it.subjectX500Principal.toString(), it.publicKey.toString(),
                     it.issuerUniqueID?.toString(), it.subjectUniqueID?.toString(), it.signature.toString()

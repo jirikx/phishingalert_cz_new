@@ -46,7 +46,7 @@ class DatabaseExporter(
         }
 
         for (cert in certs) {
-            cert.websiteId = insertedWebsite.id
+            cert.websiteId = insertedWebsite.id!!
             sslCertificateRepository.create(cert)
         }
 
