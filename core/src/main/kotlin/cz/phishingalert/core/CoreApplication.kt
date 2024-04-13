@@ -9,19 +9,19 @@ import org.springframework.context.annotation.Bean
 
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["cz.phishingalert"])
 class CoreApplication {
-	@Bean
-	fun myQueue(): Queue {
-		return Queue("myQueue", false)
-	}
+//	@Bean
+//	fun myQueue(): Queue {
+//		return Queue("myQueue", false)
+//	}
 
-	@Bean
-	fun runner(template: RabbitTemplate): ApplicationRunner {
-		return ApplicationRunner {
-			template.convertAndSend("myQueue", "Hello there :)")
-		}
-	}
+//	@Bean
+//	fun runner(template: RabbitTemplate): ApplicationRunner {
+//		return ApplicationRunner {
+//			template.convertAndSend("myQueue", "Hello there :)")
+//		}
+//	}
 }
 
 fun main(args: Array<String>) {
