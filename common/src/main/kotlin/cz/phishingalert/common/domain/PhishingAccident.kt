@@ -1,13 +1,24 @@
 package cz.phishingalert.common.domain
 
-import java.util.*
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.datetime
+import java.time.LocalDateTime
 
-class PhishingAccident(
+object PhishingAccidents : IntIdTable() {
+    val sentDate = datetime("sent_date")
+    val confirmed = bool("confirmed")
+    val noteText = varchar("note_text", 600).nullable()
+    val sourceEmail = varchar("source_email", 300).nullable()
+    val sourcePhoneNumber = varchar("source_phone_number", 100).nullable()
+    val author = reference("author_id", Authors)
+}
+
+data class PhishingAccident(
     override var id: Int?,
-    var sentDate: Date?,
+    var sentDate: LocalDateTime,
     var confirmed: Boolean,
     var noteText: String?,
     var sourceEmail: String?,
-    var sourcePhoneNumber: String?
-) : Model<Int> {
-}
+    var sourcePhoneNumber: String?,
+    var authorId: Int = 0
+) : Model<Int>
