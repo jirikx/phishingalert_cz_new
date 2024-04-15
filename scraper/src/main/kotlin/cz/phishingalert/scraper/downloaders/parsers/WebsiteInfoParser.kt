@@ -31,7 +31,6 @@ object WebsiteInfoParser {
 
         val website = Website(
             null,
-            null,
             (holder?.groups?.get(1)?.value ?: "unknown"),
             (registrar?.groups?.get(1)?.value ?: "unknown"),
             (country?.groups?.get(1)?.value ?: "unknown"),

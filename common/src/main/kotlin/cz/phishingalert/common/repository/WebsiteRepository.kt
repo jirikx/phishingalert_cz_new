@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository
 class WebsiteRepository : IntTableRepository<Website, Websites>(Websites, WebsiteConverter) {
     override fun create(entity: Website): Website {
         entity.id = table.insertAndGetId {
-            it[url] = entity.url.toString()
             it[domainHolder] = entity.domainHolder
             it[domainRegistrar] = entity.domainRegistrar
             it[country] = entity.country

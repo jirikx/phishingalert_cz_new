@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
+import java.net.URL
 import java.time.LocalDateTime
 
 
@@ -45,7 +46,7 @@ class WebFormController(
     ): String {
         val ip = request.remoteAddr
         val author = Author(0, form.name_author, form.email_author, userAgent, ip ?: "unknown")
-        val accident = PhishingAccident(0, LocalDateTime.now(), false, form.note_text, form.email, form.phone)
+        val accident = PhishingAccident(0, URL(form.website), LocalDateTime.now(), false, form.note_text, form.email, form.phone)
 
         println(author)
         println(accident)

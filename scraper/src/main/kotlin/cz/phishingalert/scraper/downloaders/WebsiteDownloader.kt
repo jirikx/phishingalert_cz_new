@@ -37,7 +37,6 @@ class WebsiteDownloader(
             result = makeWhoIsRequest(rootDomain) ?: return emptyList()
         }
 
-        result.url = url
         return listOf(result)
     }
 

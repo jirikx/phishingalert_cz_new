@@ -2,9 +2,11 @@ package cz.phishingalert.common.domain
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import java.net.URL
 import java.time.LocalDateTime
 
 object PhishingAccidents : IntIdTable() {
+    val url = varchar("url", 2000)
     val sentDate = datetime("sent_date")
     val confirmed = bool("confirmed")
     val noteText = varchar("note_text", 600).nullable()
@@ -15,6 +17,7 @@ object PhishingAccidents : IntIdTable() {
 
 data class PhishingAccident(
     override var id: Int?,
+    var url: URL? = null,
     var sentDate: LocalDateTime,
     var confirmed: Boolean,
     var noteText: String?,

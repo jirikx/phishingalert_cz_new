@@ -147,7 +147,6 @@ class WebsiteInfoParserTest {
         """.trimIndent()
         val expected = Website(
             null,
-            null,
             "CVUT-V-PRAZE",
             "REG-GRANSY",
             "CZ",
@@ -193,7 +192,6 @@ class WebsiteInfoParserTest {
         """.trimIndent()
         val expected = Website(
             null,
-            null,
             "organization",
             "Domena.pl sp. z o.o.",
             "unknown",
@@ -212,7 +210,6 @@ class WebsiteInfoParserTest {
         """.trimIndent()
         val expected = Website(
             null,
-            null,
             "CVUT-V-PRAZE",
             "REG-GRANSY",
             "unknown",
@@ -230,7 +227,6 @@ class WebsiteInfoParserTest {
             {"objectClassName":"domain","handle":"1675047635_DOMAIN_COM-VRSN","ldhName":"BAELDUNG.COM","links":[{"value":"https:\/\/rdap.verisign.com\/com\/v1\/domain\/BAELDUNG.COM","rel":"self","href":"https:\/\/rdap.verisign.com\/com\/v1\/domain\/BAELDUNG.COM","type":"application\/rdap+json"},{"value":"https:\/\/rdap.namecheap.com\/domain\/BAELDUNG.COM","rel":"related","href":"https:\/\/rdap.namecheap.com\/domain\/BAELDUNG.COM","type":"application\/rdap+json"}],"status":["client transfer prohibited"],"entities":[{"objectClassName":"entity","handle":"1068","roles":["registrar"],"publicIds":[{"type":"IANA Registrar ID","identifier":"1068"}],"vcardArray":["vcard",[["version",{},"text","4.0"],["fn",{},"text","NameCheap, Inc."]]],"entities":[{"objectClassName":"entity","roles":["abuse"],"vcardArray":["vcard",[["version",{},"text","4.0"],["fn",{},"text",""],["tel",{"type":"voice"},"uri","tel:+1.6613102107"],["email",{},"text","abuse@namecheap.com"]]]}]}],"events":[{"eventAction":"registration","eventDate":"2011-09-02T11:54:38Z"},{"eventAction":"expiration","eventDate":"2026-09-02T11:54:38Z"},{"eventAction":"last changed","eventDate":"2023-08-03T15:16:04Z"},{"eventAction":"last update of RDAP database","eventDate":"2024-04-01T18:29:50Z"}],"secureDNS":{"delegationSigned":false},"nameservers":[{"objectClassName":"nameserver","ldhName":"LAKAS.NS.CLOUDFLARE.COM"},{"objectClassName":"nameserver","ldhName":"MEERA.NS.CLOUDFLARE.COM"}],"rdapConformance":["rdap_level_0","icann_rdap_technical_implementation_guide_0","icann_rdap_response_profile_0"],"notices":[{"title":"Terms of Use","description":["Service subject to Terms of Use."],"links":[{"href":"https:\/\/www.verisign.com\/domain-names\/registration-data-access-protocol\/terms-service\/index.xhtml","type":"text\/html"}]},{"title":"Status Codes","description":["For more information on domain status codes, please visit https:\/\/icann.org\/epp"],"links":[{"href":"https:\/\/icann.org\/epp","type":"text\/html"}]},{"title":"RDDS Inaccuracy Complaint Form","description":["URL of the ICANN RDDS Inaccuracy Complaint Form: https:\/\/icann.org\/wicf"],"links":[{"href":"https:\/\/icann.org\/wicf","type":"text\/html"}]}]}
         """.trimIndent()
         val expected = Website(
-            null,
             null,
             "\"BAELDUNG.COM\"",
             "1068",

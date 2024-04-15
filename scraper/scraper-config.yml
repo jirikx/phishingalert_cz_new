@@ -3,7 +3,7 @@ settings:
   defaultWhoIsServer: whois.iana.org
   defaultRDAPServer: https://rdap.org/domain/
   crawler-config:
-    browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
+    browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfileDIFF
     visitedPagesLimit: 10 #Max number of visited websites
     triesPerPageLimit: 3  #Max number of attempts to navigate one particular URL
     userAgents:
