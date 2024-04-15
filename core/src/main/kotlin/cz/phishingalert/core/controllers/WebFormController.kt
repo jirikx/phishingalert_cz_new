@@ -2,19 +2,16 @@ package cz.phishingalert.core.controllers
 
 import cz.phishingalert.common.domain.Author
 import cz.phishingalert.common.domain.Authors
+import cz.phishingalert.common.repository.*
 import cz.phishingalert.common.domain.PhishingAccident
 import cz.phishingalert.common.domain.PhishingAccidents
-import cz.phishingalert.common.repository.AuthorRepository
-import cz.phishingalert.common.repository.PhishingAccidentRepository
-import cz.phishingalert.common.repository.WebsiteRepository
+import cz.phishingalert.core.RepositoryService
+import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.exists
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.http.server.reactive.ServerHttpRequest
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,10 +22,8 @@ import java.time.LocalDateTime
 
 
 @Controller
-@Transactional
 class WebFormController(
-    val authorRepository: AuthorRepository,
-    val phishingAccidentRepository: PhishingAccidentRepository
+    val repositoryService: RepositoryService
 ) {
     data class WebForm(
         val name_author: String,
@@ -46,31 +41,19 @@ class WebFormController(
     fun create(
         @RequestHeader(value = HttpHeaders.USER_AGENT) userAgent: String,
         @ModelAttribute form: WebForm,
-        request: ServerHttpRequest
-    ): ResponseEntity<String> {
-        val ip = request.remoteAddress?.address?.hostAddress
+        request: HttpServletRequest
+    ): String {
+        val ip = request.remoteAddr
         val author = Author(0, form.name_author, form.email_author, userAgent, ip ?: "unknown")
         val accident = PhishingAccident(0, LocalDateTime.now(), false, form.note_text, form.email, form.phone)
 
         println(author)
         println(accident)
-        save(author, accident)
+        repositoryService.save(author, accident)
 
-        return ResponseEntity<String>(HttpStatus.OK)
-    }
-
-    fun save(author: Author, accident: PhishingAccident) {
-        if (!Authors.exists())
-            SchemaUtils.create(Authors)
-        if (!PhishingAccidents.exists())
-            SchemaUtils.create(PhishingAccidents)
-
-        val inserted = authorRepository.create(author)
-        accident.authorId = inserted.id!!
-        phishingAccidentRepository.create(accident)
+        return "success"
     }
 
     @GetMapping(path = ["/nevim"])
-    fun getIp(request: ServerHttpRequest) = ResponseEntity.ok("everything's alright")
-
+    fun getIp() = ResponseEntity.ok("everything's alright")
 }

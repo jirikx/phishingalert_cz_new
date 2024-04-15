@@ -22,11 +22,14 @@ repositories {
 dependencies {
 	implementation(project(":common"))
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
-	implementation("org.springframework:spring-web")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.springframework.boot:spring-boot-starter-tomcat")
+	implementation("org.springframework:spring-webmvc")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.49.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
+	testImplementation("org.mockito:mockito-core")
 }
 
 tasks.withType<KotlinCompile> {
