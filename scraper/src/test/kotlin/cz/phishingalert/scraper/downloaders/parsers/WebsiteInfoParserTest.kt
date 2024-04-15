@@ -1,6 +1,6 @@
 package cz.phishingalert.scraper.downloaders.parsers
 
-import cz.phishingalert.scraper.domain.Website
+import cz.phishingalert.common.domain.Website
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -153,8 +153,7 @@ class WebsiteInfoParserTest {
             "CZ",
             LocalDate.of(1996,3, 10),
             LocalDate.of(2023,11, 24),
-            LocalDate.of(2024,10, 10),
-            null
+            LocalDate.of(2024,10, 10)
         )
         val parsed = WebsiteInfoParser.parseWhoIs(rawResponse)
         assertEquals(expected, parsed)
@@ -200,8 +199,7 @@ class WebsiteInfoParserTest {
             "unknown",
             LocalDate.of(2002,11, 7),
             LocalDate.of(2023,11, 15),
-            LocalDate.of(2027,3, 27),
-            null
+            LocalDate.of(2027,3, 27)
         )
         val parsed = WebsiteInfoParser.parseWhoIs(jsonStr)
         assertEquals(expected, parsed)
@@ -220,8 +218,7 @@ class WebsiteInfoParserTest {
             "unknown",
             LocalDate.of(1996,3, 10),
             LocalDate.of(2023,11, 24),
-            LocalDate.of(2024,10, 9),
-            null
+            LocalDate.of(2024,10, 9)
         )
         val parsed = WebsiteInfoParser.parseRDAP(jsonStr)
         assertEquals(expected, parsed)
@@ -240,8 +237,7 @@ class WebsiteInfoParserTest {
             "unknown",
             LocalDate.of(2011,9, 2),
             LocalDate.of(2023,8, 3),
-            LocalDate.of(2026,9, 2),
-            null
+            LocalDate.of(2026,9, 2)
         )
         val parsed = WebsiteInfoParser.parseRDAP(jsonStr)
         assertEquals(expected, parsed)

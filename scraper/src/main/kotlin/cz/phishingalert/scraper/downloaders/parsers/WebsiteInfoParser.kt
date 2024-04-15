@@ -91,7 +91,7 @@ object WebsiteInfoParser {
         }
 
         // Use the domain name in LDH form ("ldhName") if the registrant wasn't written in the "entities" field
-        if (website.domainHolder == null) {
+        if (website.domainHolder == "unknown") {
             website.domainHolder = jsonResponse["ldhName"]?.toString() ?: "unknown"
         }
 
