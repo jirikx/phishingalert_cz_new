@@ -1,12 +1,14 @@
 package cz.phishingalert.scraper.exporters
 
 import cz.phishingalert.common.domain.*
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 /**
  * Take care of exporting given entities into the output stream (printing them)
  */
 @Component
+@Profile("command-line")
 class OutputStreamExporter : Exporter {
     override fun export(
         website: Website,

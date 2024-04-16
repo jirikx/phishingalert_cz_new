@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 @Service
-//@Profile("message-queue")
+@Profile("message-queue")
 class MessageQueueProcessor(val orchestrator: Orchestrator) : InputProcessor {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 

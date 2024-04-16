@@ -8,6 +8,7 @@ import cz.phishingalert.common.repository.WebsiteRepository
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Transactional
 @Component
+@Profile("message-queue")
 class DatabaseExporter(
     val websiteRepository: WebsiteRepository,
     val dnsRecordRepository: DnsRecordRepository,

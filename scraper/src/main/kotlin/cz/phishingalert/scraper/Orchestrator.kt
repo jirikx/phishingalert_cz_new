@@ -9,7 +9,7 @@ import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
 import cz.phishingalert.scraper.downloaders.ModuleDownloader
 import cz.phishingalert.scraper.downloaders.WebsiteDownloader
-import cz.phishingalert.scraper.exporters.DatabaseExporter
+import cz.phishingalert.scraper.exporters.Exporter
 import cz.phishingalert.scraper.utils.checkURL
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,7 +25,7 @@ class Orchestrator(
     private val dnsDownloader: DnsDownloader,
     private val certificateDownloader: CertificateDownloader,
     private val playwrightConfig: PlaywrightConfig,
-    private val exporter: DatabaseExporter
+    private val exporter: Exporter
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
