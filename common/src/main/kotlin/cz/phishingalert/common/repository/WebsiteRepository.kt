@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class WebsiteRepository : IntTableRepository<Website, Websites>(Websites, WebsiteConverter) {
-    override fun create(entity: Website): Website {
+    override fun create(entity: Website): Website? {
         entity.id = table.insertAndGetId {
             it[domainHolder] = entity.domainHolder
             it[domainRegistrar] = entity.domainRegistrar

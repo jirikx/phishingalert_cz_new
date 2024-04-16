@@ -2,6 +2,7 @@ package cz.phishingalert.core.controllers
 
 import cz.phishingalert.common.domain.Author
 import cz.phishingalert.common.domain.PhishingAccident
+import cz.phishingalert.core.MessageQueueSender
 import cz.phishingalert.core.RepositoryService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,18 +13,21 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URL
 import java.time.LocalDateTime
 
 @WebMvcTest(WebFormController::class)
 class WebFormControllerTest {
     @Autowired lateinit var mockMvc: MockMvc
     @MockBean lateinit var repositoryService: RepositoryService
+    @MockBean lateinit var messageQueueSender: MessageQueueSender
 
     @Test
     fun testThatControllerReturnsHtmlPage() {
         val author = Author(1, "Bob", "mail@gmail.com", "UA", "ipAddr")
         val accident = PhishingAccident(
             1,
+            URL("https://something.com/"),
             LocalDateTime.MIN,
             false,
             "note",

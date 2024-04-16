@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ModuleInfoRepository : IntTableRepository<ModuleInfo, ModuleInfos>(ModuleInfos, ModuleInfoConverter) {
-    override fun create(entity: ModuleInfo): ModuleInfo {
+    override fun create(entity: ModuleInfo): ModuleInfo? {
         // Don't create anything if the entity already exists
         if (find(entity) != null)
             throw IllegalArgumentException("Can't create duplicity row in ModuleInfos table!")

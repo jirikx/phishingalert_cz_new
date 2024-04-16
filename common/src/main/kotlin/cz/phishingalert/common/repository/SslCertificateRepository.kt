@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class SslCertificateRepository :
     IntTableRepository<SslCertificate, SslCertificates>(SslCertificates, SslCertificateConverter) {
-    override fun create(entity: SslCertificate): SslCertificate {
+    override fun create(entity: SslCertificate): SslCertificate? {
         entity.id = table.insertAndGetId {
             it[thumbprint] = entity.thumbprint
             it[version] = entity.version

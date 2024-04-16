@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class PhishingAccidentRepository :
     IntTableRepository<PhishingAccident, PhishingAccidents>(PhishingAccidents, PhishingAccidentConverter) {
-    override fun create(entity: PhishingAccident): PhishingAccident {
+    override fun create(entity: PhishingAccident): PhishingAccident? {
         entity.id = table.insertAndGetId {
             it[url] = entity.url.toString()
             it[sentDate] = entity.sentDate

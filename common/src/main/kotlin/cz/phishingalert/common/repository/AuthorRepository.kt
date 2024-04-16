@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class AuthorRepository : IntTableRepository<Author, Authors>(Authors, AuthorConverter) {
-    override fun create(entity: Author): Author {
+    override fun create(entity: Author): Author? {
         entity.id = table.insertAndGetId {
             it[name] = entity.name
             it[email] = entity.email

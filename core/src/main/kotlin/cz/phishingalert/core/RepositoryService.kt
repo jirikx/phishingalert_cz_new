@@ -17,16 +17,22 @@ class RepositoryService(
     val authorRepository: AuthorRepository,
     val phishingAccidentRepository: PhishingAccidentRepository
 ) {
-    fun save(author: Author, accident: PhishingAccident) {
+    /**
+     * Save given [author] and [accident] to the database
+     * @return id of saved [accident], null if the [accident] couldn't be saved
+     */
+    fun save(author: Author, accident: PhishingAccident): Int? {
         // Check if the related tables were created
         if (!Authors.exists())
             SchemaUtils.create(Authors)
         if (!PhishingAccidents.exists())
             SchemaUtils.create(PhishingAccidents)
 
-        val inserted = authorRepository.create(author)
-        accident.authorId = inserted.id!!
-        phishingAccidentRepository.create(accident)
+        val insertedAuthor = authorRepository.create(author) ?: return null
+        accident.authorId = insertedAuthor.id!!
+
+        val insertedAccident = phishingAccidentRepository.create(accident) ?: return null
+        return insertedAccident.id
     }
 
 }

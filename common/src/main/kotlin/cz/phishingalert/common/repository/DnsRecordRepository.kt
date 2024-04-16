@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class DnsRecordRepository : IntTableRepository<DnsRecord, DnsRecords>(DnsRecords, DnsRecordConverter) {
-    override fun create(entity: DnsRecord): DnsRecord {
+    override fun create(entity: DnsRecord): DnsRecord? {
         entity.id = table.insertAndGetId {
             it[name] = entity.name
             it[type] = entity.type

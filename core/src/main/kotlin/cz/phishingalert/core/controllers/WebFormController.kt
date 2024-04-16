@@ -1,19 +1,17 @@
 package cz.phishingalert.core.controllers
 
+import cz.phishingalert.common.messagequeue.ScrapingMessage
 import cz.phishingalert.common.domain.Author
-import cz.phishingalert.common.domain.Authors
-import cz.phishingalert.common.repository.*
 import cz.phishingalert.common.domain.PhishingAccident
-import cz.phishingalert.common.domain.PhishingAccidents
+import cz.phishingalert.core.MessageQueueSender
 import cz.phishingalert.core.RepositoryService
 import jakarta.servlet.http.HttpServletRequest
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.exists
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,8 +22,14 @@ import java.time.LocalDateTime
 
 @Controller
 class WebFormController(
+    val messageQueueSender: MessageQueueSender,
     val repositoryService: RepositoryService
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
+    /**
+     * Class for transferring data from of the web form
+     */
     data class WebForm(
         val name_author: String,
         val email_author: String,
@@ -50,7 +54,14 @@ class WebFormController(
 
         println(author)
         println(accident)
-        repositoryService.save(author, accident)
+        val accidentId = repositoryService.save(author, accident)
+
+        if (accidentId != null) {
+            val message = ScrapingMessage(accidentId, form.website, LocalDateTime.now().toString())
+            messageQueueSender.send(message)
+        } else {
+            logger.error("Cannot send message because of missing accidentId")
+        }
 
         return "success"
     }
