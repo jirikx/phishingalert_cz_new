@@ -28,4 +28,7 @@ spring:
   exposed:
     show-sql: true
 
+server:
+  port: 8081
+
 surname: jirik

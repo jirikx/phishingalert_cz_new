@@ -12,7 +12,7 @@ class CrawlingProcess(
     private val profilePath: Path,
     private val downloadDir: Path,
     private val userAgents: List<String>
-) {
+) : AutoCloseable {
     lateinit var page: Page
     private lateinit var browser: BrowserContext
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -42,6 +42,11 @@ class CrawlingProcess(
             logger.info("Download event from ${page.url()}")
             download.saveAs(downloadDir.resolve("file-${UUID.randomUUID()}"))
         }
+    }
+
+    override fun close() {
+        page.close()
+        browser.close()
     }
 
 }

@@ -32,21 +32,21 @@ class DatabaseExporter(
         val insertedWebsite = websiteRepository.create(website)
 
         for (dnsRecord in dnsRecords) {
-            dnsRecord.websiteId = insertedWebsite.id!!
+            dnsRecord.websiteId = insertedWebsite?.id!!
             dnsRecordRepository.create(dnsRecord)
         }
 
         for (module in modules) {
-            val moduleId = moduleInfoRepository.create(module)
+            val databaseModule = moduleInfoRepository.find(module) ?: moduleInfoRepository.create(module)
             WebsiteModuleInfos.insert {
-                it[websiteId] = insertedWebsite.id!!
-                it[moduleInfoId] = moduleId.id!!
+                it[websiteId] = insertedWebsite?.id!!
+                it[moduleInfoId] = databaseModule?.id!!
             }
 
         }
 
         for (cert in certs) {
-            cert.websiteId = insertedWebsite.id!!
+            cert.websiteId = insertedWebsite?.id!!
             sslCertificateRepository.create(cert)
         }
 

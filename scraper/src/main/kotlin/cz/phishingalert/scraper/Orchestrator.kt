@@ -1,6 +1,9 @@
 package cz.phishingalert.scraper
 
+import com.microsoft.playwright.BrowserType
+import com.microsoft.playwright.Playwright
 import cz.phishingalert.scraper.configuration.AppConfig
+import cz.phishingalert.scraper.configuration.PlaywrightConfig
 import cz.phishingalert.scraper.crawler.playwright.PlaywrightCrawler
 import cz.phishingalert.scraper.downloaders.CertificateDownloader
 import cz.phishingalert.scraper.downloaders.DnsDownloader
@@ -20,14 +23,13 @@ class Orchestrator(
     private val appConfig: AppConfig,
     private val websiteDownloader: WebsiteDownloader,
     private val dnsDownloader: DnsDownloader,
-    private val moduleDownloader: ModuleDownloader,
-    private val crawler: PlaywrightCrawler,
     private val certificateDownloader: CertificateDownloader,
+    private val playwrightConfig: PlaywrightConfig,
     private val exporter: DatabaseExporter
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    fun scrape(rawUrl: String): Unit {
+    fun scrape(rawUrl: String) {
        if (!checkURL(rawUrl, true)) {
            logger.error("Can't scrape info from invalid url $rawUrl")
            return
@@ -38,13 +40,25 @@ class Orchestrator(
         val dir = setupDownloadDirectory()
         logger.info("Created tmp directory in ${dir.toUri()}")
 
+        // Download various website data
         val websiteInfo = websiteDownloader.download(url)
         val dnsRecords = dnsDownloader.download(url)
-        val usedModules = moduleDownloader.download(url)
         val certs = certificateDownloader.download(url)
 
-        crawler.crawl(url, dir)
-        exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
+        // Get data which depend on Playwright
+        val playwrightInstance = Playwright.create()
+        playwrightInstance.use { playwright ->
+            // Download modules info
+            val moduleDownloader = ModuleDownloader(playwright)
+            val usedModules = moduleDownloader.download(url)
+
+            // Crawl the website
+            val crawler = PlaywrightCrawler(playwright, playwrightConfig.options(), appConfig.crawlerConfig)
+            crawler.crawl(url, dir)
+
+            // Export the results
+            exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
+        }
     }
 
     fun checkScrapingTimeout(webDomain: String): Boolean {

@@ -16,8 +16,6 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayDeque
 
-
-@Component
 class PlaywrightCrawler(
     val playwright: Playwright,
     val options: BrowserType.LaunchPersistentContextOptions,
@@ -26,56 +24,59 @@ class PlaywrightCrawler(
     override fun crawl(url: URL, downloadDir: Path) {
         val process = CrawlingProcess(playwright, options, config.browserProfilePath, downloadDir, config.userAgents)
 
-        // Take a screenshot of the main page
-        try {
-            tryToNavigate(process, url)
-            process.page.screenshot(Page.ScreenshotOptions()
-                .setPath(downloadDir.resolve("screenshot-${LocalDateTime.now()}.png"))
-                .setFullPage(true))
-            logger.info("Took a screenshot of ${process.page.url()}")
-        } catch (ex: PlaywrightException) {
-            logger.warn("Problem navigating to $url, ${ex.message}")
-        }
-
-        val queue = ArrayDeque<URI>()
-        val alreadyFoundLinks = HashSet<URI>()
-
-        queue.add(url.toURI())
-        alreadyFoundLinks.add(url.toURI())
-
-        // Browse the links with BFS algorithm
-        while (queue.isNotEmpty()) {
-            val current = queue.removeFirst()
-            logger.info("Page: $current")
-
+        process.use {
+            // Take a screenshot of the main page
             try {
                 tryToNavigate(process, url)
+                process.page.screenshot(Page.ScreenshotOptions()
+                    .setPath(downloadDir.resolve("screenshot-${LocalDateTime.now()}.png"))
+                    .setFullPage(true))
+                logger.info("Took a screenshot of ${process.page.url()}")
             } catch (ex: PlaywrightException) {
-                logger.warn("Problem navigating to $current, ${ex.message}")
-                continue
+                logger.warn("Problem navigating to $url, ${ex.message}")
             }
 
-            // Download current webpage
-            downloadHtml(process.page, downloadDir)
-            downloadJavaScript(process.page, url, downloadDir)
-            downloadImages(process.page, url, downloadDir)
-            downloadCss(process.page, url, downloadDir)
+            val queue = ArrayDeque<URI>()
+            val alreadyFoundLinks = HashSet<URI>()
 
-            // Stop adding new links if the limit was reached
-            if (alreadyFoundLinks.size >= config.visitedPagesLimit)
-                continue
+            queue.add(url.toURI())
+            alreadyFoundLinks.add(url.toURI())
 
-            // Process the links referenced by the current page
-            val links = discoverLinks(process.page, url, true)
-            for (link in links) {
-                if (alreadyFoundLinks.size < config.visitedPagesLimit && !alreadyFoundLinks.contains(link)) {
-                    queue.add(link)
-                    alreadyFoundLinks.add(link)
+            // Browse the links with BFS algorithm
+            while (queue.isNotEmpty()) {
+                val current = queue.removeFirst()
+                logger.info("Page: $current")
+
+                try {
+                    tryToNavigate(process, url)
+                } catch (ex: PlaywrightException) {
+                    logger.warn("Problem navigating to $current, ${ex.message}")
+                    continue
+                }
+
+                // Download current webpage
+                downloadHtml(process.page, downloadDir)
+                downloadJavaScript(process.page, url, downloadDir)
+                downloadImages(process.page, url, downloadDir)
+                downloadCss(process.page, url, downloadDir)
+
+                // Stop adding new links if the limit was reached
+                if (alreadyFoundLinks.size >= config.visitedPagesLimit)
+                    continue
+
+                // Process the links referenced by the current page
+                val links = discoverLinks(process.page, url, true)
+                for (link in links) {
+                    if (alreadyFoundLinks.size < config.visitedPagesLimit && !alreadyFoundLinks.contains(link)) {
+                        queue.add(link)
+                        alreadyFoundLinks.add(link)
+                    }
                 }
             }
+
+            logger.info("Crawling of $url has finished")
         }
 
-        logger.info("Crawling of $url has finished")
     }
 
     /**

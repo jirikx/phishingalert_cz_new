@@ -4,14 +4,10 @@ import com.microsoft.playwright.BrowserType
 import com.microsoft.playwright.Playwright
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-@Configuration
-class PlaywrightConfig {
-    @Bean
-    fun playwright(): Playwright {
-        return Playwright.create()
-    }
+import org.springframework.stereotype.Component
 
-    @Bean
+@Component
+class PlaywrightConfig {
     fun options(): BrowserType.LaunchPersistentContextOptions {
         return BrowserType.LaunchPersistentContextOptions()
             .setSlowMo(50.0)
@@ -22,4 +18,3 @@ class PlaywrightConfig {
             .setViewportSize(1920, 1080)
     }
 }
-

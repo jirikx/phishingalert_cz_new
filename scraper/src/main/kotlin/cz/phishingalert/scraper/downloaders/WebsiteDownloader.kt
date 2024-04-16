@@ -25,8 +25,7 @@ private const val MAX_REDIRECT_COUNT = 3
 
 @Component
 class WebsiteDownloader(
-    val appConfig: AppConfig,
-    val playwright: Playwright
+    val appConfig: AppConfig
 ) : Downloader<Website>() {
 
     override fun download(url: URL): List<Website> {
