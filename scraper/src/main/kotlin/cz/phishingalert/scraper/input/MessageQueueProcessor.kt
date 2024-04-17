@@ -8,6 +8,7 @@ import org.slf4j.Logger
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
+import kotlin.math.log
 
 @Service
 @Profile("message-queue")
@@ -17,6 +18,11 @@ class MessageQueueProcessor(val orchestrator: Orchestrator) : InputProcessor {
     @RabbitListener(queues = [QUEUE_NAME])
     fun listen(message: ScrapingMessage) {
         logger.info("Message read from $QUEUE_NAME : $message")
-        orchestrator.scrape(message.url)
+
+        try {
+            orchestrator.scrape(message.url, message.accidentId)
+        } catch (ex: Exception) {
+            logger.error("$ex")
+        }
     }
 }

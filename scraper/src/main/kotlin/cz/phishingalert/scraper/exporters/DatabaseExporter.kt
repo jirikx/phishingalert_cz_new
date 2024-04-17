@@ -1,16 +1,16 @@
 package cz.phishingalert.scraper.exporters
 
 import cz.phishingalert.common.domain.*
-import cz.phishingalert.common.repository.DnsRecordRepository
-import cz.phishingalert.common.repository.ModuleInfoRepository
-import cz.phishingalert.common.repository.SslCertificateRepository
-import cz.phishingalert.common.repository.WebsiteRepository
+import cz.phishingalert.common.repository.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.exp
 
 /**
  * Take care of exporting given entities into the database
@@ -19,11 +19,14 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 @Profile("message-queue")
 class DatabaseExporter(
+    val phishingAccidentRepository: PhishingAccidentRepository,
     val websiteRepository: WebsiteRepository,
     val dnsRecordRepository: DnsRecordRepository,
     val moduleInfoRepository: ModuleInfoRepository,
     val sslCertificateRepository: SslCertificateRepository
 ) : Exporter {
+    protected val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     override fun export(
         website: Website,
         dnsRecords: Collection<DnsRecord>,
@@ -54,6 +57,23 @@ class DatabaseExporter(
 
     }
 
+    override fun export(
+        phishingAccidentId: Int,
+        website: Website,
+        dnsRecords: Collection<DnsRecord>,
+        modules: Collection<ModuleInfo>,
+        certs: Collection<SslCertificate>
+    ) {
+        val accident = phishingAccidentRepository.find(phishingAccidentId)
+        if (accident == null) {
+            logger.error("Accident with id=$phishingAccidentId wasn't found. Data export aborted!")
+            return
+        }
+
+        website.phishingAccidentId = phishingAccidentId
+        export(website, dnsRecords, modules, certs)
+    }
+
     /**
      * Create the database tables if they don't exist.
      * This function needs to be used because Exposed library only scans tables in current module by default
@@ -64,7 +84,7 @@ class DatabaseExporter(
             SchemaUtils.create(Websites)
         if ((!DnsRecords.exists()))
             SchemaUtils.create(DnsRecords)
-        if(!ModuleInfos.exists())
+        if (!ModuleInfos.exists())
             SchemaUtils.create(ModuleInfos)
         if (!SslCertificates.exists())
             SchemaUtils.create(SslCertificates)

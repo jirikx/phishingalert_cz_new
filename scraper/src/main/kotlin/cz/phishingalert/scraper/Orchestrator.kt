@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
+import kotlin.math.exp
 
 @Component
 class Orchestrator(
@@ -29,7 +30,11 @@ class Orchestrator(
 ) {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    fun scrape(rawUrl: String) {
+    /**
+     * Get data about website with given [rawUrl] and connect it with the phishing accident identified by [accidentId]
+     * The website is connected with phishing accident only if the optional argument [accidentId] is specified
+     */
+    fun scrape(rawUrl: String, accidentId: Int? = null) {
        if (!checkURL(rawUrl, true)) {
            logger.error("Can't scrape info from invalid url $rawUrl")
            return
@@ -57,7 +62,10 @@ class Orchestrator(
             crawler.crawl(url, dir)
 
             // Export the results
-            exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
+            if (accidentId == null)
+                exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
+            else
+                exporter.export(accidentId, websiteInfo.first(), dnsRecords, usedModules, certs)
         }
     }
 
