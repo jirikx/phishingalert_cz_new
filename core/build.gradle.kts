@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.springframework:spring-webmvc")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.49.0")
+	implementation("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
 	testImplementation("org.mockito:mockito-core")

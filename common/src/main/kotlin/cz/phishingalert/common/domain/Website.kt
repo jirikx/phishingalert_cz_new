@@ -27,5 +27,5 @@ data class Website(
     var lastUpdateDate: LocalDate = LocalDate.EPOCH,
     var expirationDate: LocalDate = LocalDate.EPOCH,
     var fileSystemPath: String = "unknown",
-    var phishingAccident: PhishingAccident? = null
+    var phishingAccidentId: Int? = null
 ) : Model<Int>

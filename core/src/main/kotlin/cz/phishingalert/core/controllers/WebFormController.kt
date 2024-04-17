@@ -12,13 +12,16 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import java.net.URL
+import java.time.Duration
 import java.time.LocalDateTime
 
+const val MIN_TIME_DIFF = 500  // in minutes
 
 @Controller
 class WebFormController(
@@ -48,16 +51,22 @@ class WebFormController(
         @ModelAttribute form: WebForm,
         request: HttpServletRequest
     ): String {
+        var shouldCrawl = true
         val ip = request.remoteAddr
         val author = Author(0, form.name_author, form.email_author, userAgent, ip ?: "unknown")
         val accident = PhishingAccident(0, URL(form.website), LocalDateTime.now(), false, form.note_text, form.email, form.phone)
 
         println(author)
         println(accident)
-        val accidentId = repositoryService.save(author, accident)
 
+        // Check if the time limit between similar accident reporting already passed
+        val timeDiff = Duration.between(repositoryService.timeOfLastSimilarAccident(accident), LocalDateTime.now())
+        if (timeDiff.toMinutes() < MIN_TIME_DIFF)
+            shouldCrawl = false
+
+        val accidentId = repositoryService.save(author, accident)
         if (accidentId != null) {
-            val message = ScrapingMessage(accidentId, form.website, LocalDateTime.now().toString())
+            val message = ScrapingMessage(accidentId, form.website, LocalDateTime.now().toString(), shouldCrawl)
             messageQueueSender.send(message)
         } else {
             logger.error("Cannot send message because of missing accidentId")

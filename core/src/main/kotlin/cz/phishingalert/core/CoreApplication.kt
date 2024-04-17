@@ -5,22 +5,14 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-
+import org.thymeleaf.expression.Dates
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @SpringBootApplication(scanBasePackages = ["cz.phishingalert"])
 class CoreApplication {
-//	@Bean
-//	fun myQueue(): Queue {
-//		return Queue("myQueue", false)
-//	}
 
-//	@Bean
-//	fun runner(template: RabbitTemplate): ApplicationRunner {
-//		return ApplicationRunner {
-//			template.convertAndSend("myQueue", "Hello there :)")
-//		}
-//	}
 }
 
 fun main(args: Array<String>) {

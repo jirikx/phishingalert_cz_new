@@ -18,6 +18,7 @@ class WebsiteRepository : IntTableRepository<Website, Websites>(Websites, Websit
             it[lastUpdateDate] = entity.lastUpdateDate
             it[expirationDate] = entity.expirationDate
             it[filesystemPath] = entity.fileSystemPath
+            it[phishingAccident] = entity.phishingAccidentId
         }.value
         return entity
     }
