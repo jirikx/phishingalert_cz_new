@@ -15,7 +15,6 @@ object Websites : IntIdTable() {
     val lastUpdateDate = date("last_update")
     val expirationDate = date("expiration")
     val filesystemPath = varchar("filesystem-path", 300)
-    val phishingAccident = reference("phishing_accident_id", PhishingAccidents).nullable()
 }
 
 data class Website(
@@ -27,5 +26,4 @@ data class Website(
     var lastUpdateDate: LocalDate = LocalDate.EPOCH,
     var expirationDate: LocalDate = LocalDate.EPOCH,
     var fileSystemPath: String = "unknown",
-    var phishingAccidentId: Int? = null
 ) : Model<Int>

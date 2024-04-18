@@ -24,7 +24,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.49.0")
     implementation("org.jetbrains.exposed:exposed-java-time:0.49.0")
-    implementation("com.h2database:h2:2.2.224")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

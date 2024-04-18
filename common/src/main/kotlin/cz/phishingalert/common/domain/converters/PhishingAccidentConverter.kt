@@ -10,4 +10,6 @@ object PhishingAccidentConverter : RowConverter<PhishingAccident> {
 }
 
 fun PhishingAccidents.rowToRecord(row: ResultRow): PhishingAccident =
-    PhishingAccident(row[id].value, URL(row[url]), row[sentDate], row[confirmed], row[noteText], row[sourceEmail], row[sourcePhoneNumber])
+    PhishingAccident(
+        row[id].value, URL(row[url]), row[sentDate], row[confirmed], row[noteText],
+        row[sourceEmail], row[sourcePhoneNumber], row[author].value, row[website]?.value)

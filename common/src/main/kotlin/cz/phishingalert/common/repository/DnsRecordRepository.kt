@@ -5,6 +5,7 @@ import cz.phishingalert.common.domain.converters.DnsRecordConverter
 import cz.phishingalert.common.domain.DnsRecords
 import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.selectAll
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -19,5 +20,12 @@ class DnsRecordRepository : IntTableRepository<DnsRecord, DnsRecords>(DnsRecords
             it[website] = entity.websiteId
         }.value
         return entity
+    }
+
+    fun findAllByWebsiteId(websiteId: Int): Collection<DnsRecord> {
+        return table
+            .selectAll()
+            .where { table.website eq websiteId }
+            .map { converter.rowToRecord(it) }
     }
 }
