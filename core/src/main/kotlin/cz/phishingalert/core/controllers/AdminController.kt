@@ -24,7 +24,7 @@ class AdminController(val repositoryService: RepositoryService) {
 
     @GetMapping
     fun showAdminPanel(model: Model): String {
-        val accidents = repositoryService.getAllAccidents()
+        val accidents = repositoryService.readAllAccidents()
         model.addAttribute("accidents", accidents)
 
         return "admin/admin"

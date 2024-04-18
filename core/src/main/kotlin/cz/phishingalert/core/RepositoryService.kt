@@ -1,11 +1,7 @@
 package cz.phishingalert.core
 
-import cz.phishingalert.common.domain.Author
-import cz.phishingalert.common.domain.Authors
-import cz.phishingalert.common.domain.PhishingAccident
-import cz.phishingalert.common.domain.PhishingAccidents
-import cz.phishingalert.common.repository.AuthorRepository
-import cz.phishingalert.common.repository.PhishingAccidentRepository
+import cz.phishingalert.common.domain.*
+import cz.phishingalert.common.repository.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.exists
 import org.springframework.stereotype.Component
@@ -16,7 +12,11 @@ import java.time.LocalDateTime
 @Transactional
 class RepositoryService(
     val authorRepository: AuthorRepository,
-    val phishingAccidentRepository: PhishingAccidentRepository
+    val dnsRepository: DnsRecordRepository,
+    val moduleInfoRepository: ModuleInfoRepository,
+    val phishingAccidentRepository: PhishingAccidentRepository,
+    val sslCertificateRepository: SslCertificateRepository,
+    val websiteRepository: WebsiteRepository
 ) {
     fun createTablesIfNotExist() {
         // Check if the related tables were created
@@ -24,6 +24,16 @@ class RepositoryService(
             SchemaUtils.create(Authors)
         if (!PhishingAccidents.exists())
             SchemaUtils.create(PhishingAccidents)
+        if (!Websites.exists())
+            SchemaUtils.create(Websites)
+        if ((!DnsRecords.exists()))
+            SchemaUtils.create(DnsRecords)
+        if (!ModuleInfos.exists())
+            SchemaUtils.create(ModuleInfos)
+        if (!SslCertificates.exists())
+            SchemaUtils.create(SslCertificates)
+        if (!WebsiteModuleInfos.exists())
+            SchemaUtils.create(WebsiteModuleInfos)
     }
 
     /**
@@ -46,8 +56,21 @@ class RepositoryService(
         return lastSimilarAccident.sentDate
     }
 
-    fun getAllAccidents(): Collection<PhishingAccident> {
-        return phishingAccidentRepository.findAll()
-    }
+    fun readAllAccidents(): Collection<PhishingAccident> =
+        phishingAccidentRepository.findAll()
 
+    fun readAccidentById(id: Int): PhishingAccident? =
+        phishingAccidentRepository.find(id)
+
+    fun readWebsiteById(id:Int): Website? =
+        websiteRepository.find(id)
+
+    fun readDnsRecordsByWebsiteId(websiteId: Int): Collection<DnsRecord> =
+        dnsRepository.findAllByWebsiteId(websiteId)
+
+    fun readModuleInfosByWebsiteId(websiteId: Int): Collection<ModuleInfo> =
+        moduleInfoRepository.findAllByWebsiteId(websiteId)
+
+    fun readSslCertificatesByWebsiteId(websiteId: Int): Collection<SslCertificate> =
+        sslCertificateRepository.findAllByWebsiteId(websiteId)
 }

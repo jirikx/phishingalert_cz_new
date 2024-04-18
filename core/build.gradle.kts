@@ -31,6 +31,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
 	testImplementation("org.mockito:mockito-core")
+	testImplementation("com.h2database:h2:2.2.224")
 }
 
 tasks.withType<KotlinCompile> {
