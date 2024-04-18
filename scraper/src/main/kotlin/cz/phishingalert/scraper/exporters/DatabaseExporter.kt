@@ -33,6 +33,42 @@ class DatabaseExporter(
         modules: Collection<ModuleInfo>,
         certs: Collection<SslCertificate>
     ) {
+        insertRowsFromScraper(website, dnsRecords, modules, certs)
+    }
+
+    override fun export(
+        phishingAccidentId: Int,
+        website: Website,
+        dnsRecords: Collection<DnsRecord>,
+        modules: Collection<ModuleInfo>,
+        certs: Collection<SslCertificate>
+    ) {
+        val accident = phishingAccidentRepository.find(phishingAccidentId)
+        if (accident == null) {
+            logger.error("Accident with id=$phishingAccidentId wasn't found. Data export aborted!")
+            return
+        }
+
+        // Connect the Accident with its Website
+        val websiteId = insertRowsFromScraper(website, dnsRecords, modules, certs)
+        if (websiteId == null) {
+            logger.error("Accident with id=$phishingAccidentId couldn't be connected with a website. Data export aborted!")
+            return
+        }
+        accident.websiteId = websiteId
+        phishingAccidentRepository.update(accident)
+    }
+
+    /**
+     * Insert the rows with data from the Scraper module
+     * @return id of inserted [website] row, null if the row wasn't created
+     */
+    fun insertRowsFromScraper(
+        website: Website,
+        dnsRecords: Collection<DnsRecord>,
+        modules: Collection<ModuleInfo>,
+        certs: Collection<SslCertificate>
+    ): Int? {
         createTablesIfNotExist()
         val insertedWebsite = websiteRepository.create(website)
 
@@ -55,23 +91,7 @@ class DatabaseExporter(
             sslCertificateRepository.create(cert)
         }
 
-    }
-
-    override fun export(
-        phishingAccidentId: Int,
-        website: Website,
-        dnsRecords: Collection<DnsRecord>,
-        modules: Collection<ModuleInfo>,
-        certs: Collection<SslCertificate>
-    ) {
-        val accident = phishingAccidentRepository.find(phishingAccidentId)
-        if (accident == null) {
-            logger.error("Accident with id=$phishingAccidentId wasn't found. Data export aborted!")
-            return
-        }
-
-        website.phishingAccidentId = phishingAccidentId
-        export(website, dnsRecords, modules, certs)
+        return insertedWebsite?.id
     }
 
     /**
