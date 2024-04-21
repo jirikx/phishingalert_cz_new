@@ -1,0 +1,3 @@
+package cz.phishingalert.core.reportbuilders
+
+interface ReportBuilder
