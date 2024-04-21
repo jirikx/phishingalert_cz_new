@@ -3,9 +3,10 @@ settings:
   defaultWhoIsServer: whois.iana.org
   defaultRDAPServer: https://rdap.org/domain/
   crawler-config:
-    browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfileDIFF
+    browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
     visitedPagesLimit: 10 #Max number of visited websites
     triesPerPageLimit: 3  #Max number of attempts to navigate one particular URL
+    allowOutsideDomain: true #Visit links which lead to external websites
     userAgents:
       - "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
       - "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.4; rv:124.0) Gecko/20100101 Firefox/124.0"
@@ -27,8 +28,5 @@ spring:
     password: password
   exposed:
     show-sql: true
-
-server:
-  port: 8081
-
-surname: jirik
+  main:
+    web-application-type: none  #Don't start the web server

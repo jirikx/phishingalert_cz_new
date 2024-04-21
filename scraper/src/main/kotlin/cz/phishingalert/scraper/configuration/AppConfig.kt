@@ -15,6 +15,7 @@ data class AppConfig(
         val browserProfilePath: Path,
         val visitedPagesLimit: Int,
         val triesPerPageLimit: Int,
+        val allowOutsideDomain: Boolean,
         val userAgents: List<String>
     )
 }

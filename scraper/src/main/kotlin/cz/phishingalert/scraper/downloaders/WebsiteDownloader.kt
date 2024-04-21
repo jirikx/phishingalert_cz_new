@@ -87,7 +87,6 @@ class WebsiteDownloader(
      * Make RDAP request with a HttpClient
      */
     fun makeRDAPRequest(domain: String): Website? {
-        logger.warn("DOMAIN RDAP: $domain")
         val client = HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.ALWAYS).build()
         val request = HttpRequest.newBuilder()

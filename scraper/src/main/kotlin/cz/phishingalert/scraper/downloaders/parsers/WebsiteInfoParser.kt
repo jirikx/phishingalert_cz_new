@@ -18,7 +18,7 @@ object WebsiteInfoParser {
     /**
      * Parse the raw WhoIs query result and save it into the related class
      */
-    fun parseWhoIs(rawWhoIs: String): Website? {
+    fun parseWhoIs(rawWhoIs: String): Website {
         val options = setOf(RegexOption.MULTILINE, RegexOption.IGNORE_CASE)
 
         // Regexes for given keywords in the WhoIs query

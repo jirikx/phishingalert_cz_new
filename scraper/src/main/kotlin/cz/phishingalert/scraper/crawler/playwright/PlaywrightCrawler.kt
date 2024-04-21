@@ -4,10 +4,7 @@ import com.microsoft.playwright.*
 import cz.phishingalert.scraper.configuration.AppConfig
 import cz.phishingalert.scraper.crawler.Crawler
 import cz.phishingalert.scraper.utils.createSubDirectory
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
 import java.io.File
 import java.net.URI
 import java.net.URL
@@ -65,7 +62,7 @@ class PlaywrightCrawler(
                     continue
 
                 // Process the links referenced by the current page
-                val links = discoverLinks(process.page, url, true)
+                val links = discoverLinks(process.page, url, config.allowOutsideDomain)
                 for (link in links) {
                     if (alreadyFoundLinks.size < config.visitedPagesLimit && !alreadyFoundLinks.contains(link)) {
                         queue.add(link)
