@@ -1,0 +1,14 @@
+report-author:
+  name: "Jan Novák"
+  email: test@example.com
+  company:
+  phoneNumber: ccd
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    driver-class-name: org.postgresql.Driver
+    username: sa
+    password: password
+  exposed:
+    show-sql: true

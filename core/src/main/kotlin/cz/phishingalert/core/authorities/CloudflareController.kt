@@ -1,6 +1,7 @@
 package cz.phishingalert.core.authorities
 
 import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.core.configuration.ReportAuthor
 import cz.phishingalert.core.reportbuilders.QueryStringReportBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class CloudflareController(val repositoryService: RepositoryService) {
+class CloudflareController(
+    val reportAuthor: ReportAuthor,
+    val repositoryService: RepositoryService) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     val submitUrl = "https://abuse.cloudflare.com/phishing"
 
@@ -38,6 +41,7 @@ class CloudflareController(val repositoryService: RepositoryService) {
             return null
         }
 
+        addAuthorToQuery(queryStringReportBuilder)
         queryStringReportBuilder.addParameter("urls", accident.url.toString())
         if (accident.noteText != null)
             queryStringReportBuilder.addParameter("comments", accident.noteText!!)
@@ -61,6 +65,18 @@ class CloudflareController(val repositoryService: RepositoryService) {
         }
 
         return queryStringReportBuilder.getQuery()
+    }
+
+    fun addAuthorToQuery(queryStringReportBuilder: QueryStringReportBuilder) {
+        queryStringReportBuilder.addParameter("name", reportAuthor.name)
+        queryStringReportBuilder.addParameter("email", reportAuthor.email)
+        queryStringReportBuilder.addParameter("email2", reportAuthor.email)
+
+        if (reportAuthor.company != null)
+            queryStringReportBuilder.addParameter("company", reportAuthor.company!!)
+
+        if (reportAuthor.phoneNumber != null)
+            queryStringReportBuilder.addParameter("telephone", reportAuthor.phoneNumber!!)
     }
 
 }
