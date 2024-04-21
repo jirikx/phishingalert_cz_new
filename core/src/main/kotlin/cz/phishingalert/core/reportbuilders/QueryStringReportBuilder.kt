@@ -1,5 +1,7 @@
 package cz.phishingalert.core.reportbuilders
 
+import java.net.URLEncoder
+
 /**
  * Build a query string which can be later used in a URL
  */
@@ -12,9 +14,9 @@ class QueryStringReportBuilder : ReportBuilder {
      */
     fun addParameter(key: String, value: String) {
         if (map.contains(key))
-            map[key]?.add(value)
+            map[key]?.add(URLEncoder.encode(value, "UTF-8"))
         else
-            map[key] = mutableListOf(value)
+            map[key] = mutableListOf(URLEncoder.encode(value, "UTF-8"))
     }
 
     /**
