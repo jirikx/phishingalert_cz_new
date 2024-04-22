@@ -56,20 +56,40 @@ class RepositoryService(
         return lastSimilarAccident.sentDate
     }
 
+    /**
+     * Get accidents which share some of the modules with [accident] and rank them
+     */
+    fun getSimilarAccidents(accident: PhishingAccident): Collection<PhishingAccident> {
+        //todo: implement filtering logic
+        return readAllAccidents()
+    }
+
     fun readAllAccidents(): Collection<PhishingAccident> =
         phishingAccidentRepository.findAll()
 
     fun readAccidentById(id: Int): PhishingAccident? =
         phishingAccidentRepository.find(id)
 
-    fun readWebsiteById(id:Int): Website? =
+    fun readWebsiteById(id: Int): Website? =
         websiteRepository.find(id)
 
     fun readDnsRecordsByWebsiteId(websiteId: Int): Collection<DnsRecord> =
         dnsRepository.findAllByWebsiteId(websiteId)
 
+    fun readModuleInfosByAccidentId(accidentId: Int): Collection<ModuleInfo> {
+        val accident = readAccidentById(accidentId)
+        if (accident?.websiteId == null)
+            return emptyList()
+
+        val website = readWebsiteById(accident.websiteId!!)
+        if (website?.id == null)
+            return emptyList()
+
+        return readModuleInfosByWebsiteId(website.id!!)
+    }
+
     fun readModuleInfosByWebsiteId(websiteId: Int): Collection<ModuleInfo> =
-        moduleInfoRepository.findAllByWebsiteId(websiteId)
+        moduleInfoRepository.findAllByWebsiteId(websiteId).sortedBy { it.name }
 
     fun readSslCertificatesByWebsiteId(websiteId: Int): Collection<SslCertificate> =
         sslCertificateRepository.findAllByWebsiteId(websiteId)

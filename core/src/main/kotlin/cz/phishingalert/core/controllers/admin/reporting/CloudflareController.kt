@@ -1,16 +1,19 @@
-package cz.phishingalert.core.authorities
+package cz.phishingalert.core.controllers.admin.reporting
 
 import cz.phishingalert.core.RepositoryService
 import cz.phishingalert.core.configuration.ReportAuthor
 import cz.phishingalert.core.reportbuilders.QueryStringReportBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
+@RequestMapping(path = ["/admin"])
 class CloudflareController(
     val reportAuthor: ReportAuthor,
     val repositoryService: RepositoryService) {
@@ -24,7 +27,12 @@ class CloudflareController(
     fun sendAccidentToAuthority(
         @PathVariable accidentId: Int
     ): ModelAndView {
-        val queryString = createQueryString(accidentId) ?: return ModelAndView("failure")
+        val queryString = createQueryString(accidentId)
+
+        if (queryString == null) {
+            logger.warn("Can't report phishing accident with $accidentId because it wasn't found!")
+            return ModelAndView("error/404", HttpStatus.NOT_FOUND)
+        }
 
         return ModelAndView("redirect:$submitUrl$queryString")
     }
@@ -51,7 +59,7 @@ class CloudflareController(
             queryStringReportBuilder.addParameter("justification", "It was sent via phone number: ${accident.sourcePhoneNumber!!}")
 
         // Utilise website's data if it exists
-        val website = repositoryService.readWebsiteById(accident.id!!) ?: return queryStringReportBuilder.getQuery()
+        val website = repositoryService.readWebsiteById(accident.websiteId!!) ?: return queryStringReportBuilder.getQuery()
         queryStringReportBuilder.addParameter(
             "justification",
             "The website was registered at ${website.domainRegistrar} registrar and the domain holder is ${website.domainHolder}.")

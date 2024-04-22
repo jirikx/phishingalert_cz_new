@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Website statistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<div class="container bg-light">
+    <h1 class="text-center" th:text="'Similar reports to ' + ${websiteUrl}"></h1>
+    <hr/>
+    <div th:each="accident: ${similarAccidents}">
+        <div class="item">
+            <div class="row">
+                <p class="col fw-bold" th:text="'Accident ID: ' + ${accident.id}"></p>
+                <p class="col fw-bold" th:text="${accident.url}"></p>
+                <p class="col fw-bold" th:text="${#temporals.format(accident.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
+                <div class="container">
+                    <p>Used modules:</p>
+                    <ul th:each="module: ${@repositoryService.readModuleInfosByAccidentId(accident.id)}">
+                        <li th:text="${module.name} + ', version: ' + ${module.version}"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

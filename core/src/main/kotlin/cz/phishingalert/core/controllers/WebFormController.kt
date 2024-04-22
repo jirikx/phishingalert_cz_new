@@ -56,8 +56,8 @@ class WebFormController(
         val author = Author(0, form.name_author, form.email_author, userAgent, ip ?: "unknown")
         val accident = PhishingAccident(0, URL(form.website), LocalDateTime.now(), false, form.note_text, form.email, form.phone)
 
-        println(author)
-        println(accident)
+        logger.info(author.toString())
+        logger.info(accident.toString())
 
         // Check if the time limit between similar accident reporting already passed
         val timeDiff = Duration.between(repositoryService.timeOfLastSimilarAccident(accident), LocalDateTime.now())
