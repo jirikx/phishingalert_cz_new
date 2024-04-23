@@ -1,8 +1,10 @@
-report-author:
-  name: "Jan Novák"
-  email: test@example.com
-  company:
-  phoneNumber: ccd
+settings:
+  report-author:
+    name: "Jan Novák"
+    email: test@example.com
+    company:
+    phoneNumber: ccd
+  sftpDirectory: /sftp_user
 
 spring:
   datasource:

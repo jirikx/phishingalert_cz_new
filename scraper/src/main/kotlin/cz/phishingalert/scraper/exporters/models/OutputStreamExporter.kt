@@ -1,16 +1,15 @@
-package cz.phishingalert.scraper.exporters
+package cz.phishingalert.scraper.exporters.models
 
 import cz.phishingalert.common.domain.*
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import kotlin.math.exp
 
 /**
- * Take care of exporting given entities into the output stream (printing them)
+ * Take care of exporting given models into the output stream (printing them)
  */
 @Component
 @Profile("command-line")
-class OutputStreamExporter : Exporter {
+class OutputStreamExporter : ModelExporter {
     override fun export(
         website: Website,
         dnsRecords: Collection<DnsRecord>,

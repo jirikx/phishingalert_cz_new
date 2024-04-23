@@ -5,6 +5,7 @@ import cz.phishingalert.common.domain.Author
 import cz.phishingalert.common.domain.PhishingAccident
 import cz.phishingalert.core.MessageQueueSender
 import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.core.configuration.CoreConfig
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -12,7 +13,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,7 +26,8 @@ const val MIN_TIME_DIFF = 500  // in minutes
 @Controller
 class WebFormController(
     val messageQueueSender: MessageQueueSender,
-    val repositoryService: RepositoryService
+    val repositoryService: RepositoryService,
+    val config: CoreConfig
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -54,7 +55,15 @@ class WebFormController(
         var shouldCrawl = true
         val ip = request.remoteAddr
         val author = Author(0, form.name_author, form.email_author, userAgent, ip ?: "unknown")
-        val accident = PhishingAccident(0, URL(form.website), LocalDateTime.now(), false, form.note_text, form.email, form.phone)
+        val accident = PhishingAccident(
+            0,
+            URL(form.website),
+            LocalDateTime.now(),
+            false,
+            form.note_text,
+            form.email,
+            form.phone
+        )
 
         logger.info(author.toString())
         logger.info(accident.toString())
@@ -66,7 +75,14 @@ class WebFormController(
 
         val accidentId = repositoryService.save(author, accident)
         if (accidentId != null) {
-            val message = ScrapingMessage(accidentId, form.website, LocalDateTime.now().toString(), shouldCrawl)
+            val message = ScrapingMessage(
+                accidentId,
+                form.website,
+                LocalDateTime.now().toString(),
+                shouldCrawl,
+                config.sftpDirectory
+            )
+
             messageQueueSender.send(message)
         } else {
             logger.error("Cannot send message because of missing accidentId")
@@ -75,6 +91,4 @@ class WebFormController(
         return "success"
     }
 
-    @GetMapping(path = ["/nevim"])
-    fun getIp() = ResponseEntity.ok("everything's alright")
 }

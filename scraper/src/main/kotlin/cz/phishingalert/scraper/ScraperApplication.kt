@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment
 import org.xbill.DNS.Message
 
 @SpringBootApplication(scanBasePackages = ["cz.phishingalert"])
-@EnableConfigurationProperties(AppConfig::class, AppConfig.CrawlerConfig::class)
+@EnableConfigurationProperties(AppConfig::class, AppConfig.CrawlerConfig::class, AppConfig.SftpConfig::class)
 class ScraperApplication(
     val orchestrator: Orchestrator
 ) : ApplicationRunner {

@@ -33,6 +33,7 @@ dependencies {
     implementation("dnsjava:dnsjava:3.5.3")
     implementation("com.google.guava:guava:33.1.0-jre")
     implementation("org.postgresql:postgresql")
+    implementation("com.github.mwiede:jsch:0.2.17")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation(kotlin("test"))

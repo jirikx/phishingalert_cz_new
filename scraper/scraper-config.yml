@@ -4,7 +4,7 @@ settings:
   defaultRDAPServer: https://rdap.org/domain/
   crawler-config:
     browserProfilePath: /home/jirik/snap/firefox/common/.mozilla/firefox/53qm6ryg.TestProfile
-    visitedPagesLimit: 10 #Max number of visited websites
+    visitedPagesLimit: 5 #Max number of visited websites
     triesPerPageLimit: 3  #Max number of attempts to navigate one particular URL
     allowOutsideDomain: true #Visit links which lead to external websites
     userAgents:
@@ -14,11 +14,12 @@ settings:
       - "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"
       - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:123.0) Gecko/20100101 Firefox/123.0"
       - "Mozilla/5.0 (Windows NT 5.1; rv:123.0) Gecko/20100101 Firefox/123.0"
-
-remoteStorage:
-  address: localhost
-  port: 22
-  path: /path/to/directory
+  sftp-config:
+    knownHostsPath: /home/jirik/.ssh/known_hosts
+    remoteHostName: 127.0.0.1
+    remotePort: 22
+    username: sftp_user
+    password: password
 
 spring:
   datasource:

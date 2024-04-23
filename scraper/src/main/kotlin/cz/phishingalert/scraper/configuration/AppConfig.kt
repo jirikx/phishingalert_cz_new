@@ -8,7 +8,8 @@ data class AppConfig(
     val timeLimit: Int,
     val defaultWhoIsServer: String,
     val defaultRDAPServer: String,
-    val crawlerConfig: CrawlerConfig
+    val crawlerConfig: CrawlerConfig,
+    val sftpConfig: SftpConfig
 ) {
     @ConfigurationProperties(prefix = "settings.crawler-config")
     data class CrawlerConfig(
@@ -17,5 +18,14 @@ data class AppConfig(
         val triesPerPageLimit: Int,
         val allowOutsideDomain: Boolean,
         val userAgents: List<String>
+    )
+
+    @ConfigurationProperties(prefix = "settings.sftp-config")
+    data class SftpConfig(
+        val knownHostsPath: String,
+        val remoteHostName: String,
+        val remotePort: Int,
+        val username: String,
+        val password: String
     )
 }

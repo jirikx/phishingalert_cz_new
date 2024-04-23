@@ -1,11 +1,11 @@
-package cz.phishingalert.scraper.exporters
+package cz.phishingalert.scraper.exporters.models
 
 import cz.phishingalert.common.domain.*
 
 /**
- * Take care of exporting given entities to some destination
+ * Take care of exporting given models to some destination
  */
-interface Exporter {
+interface ModelExporter {
     fun export(
         website: Website,
         dnsRecords: Collection<DnsRecord>,

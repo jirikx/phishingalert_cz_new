@@ -20,7 +20,7 @@ class MessageQueueProcessor(val orchestrator: Orchestrator) : InputProcessor {
         logger.info("Message read from $QUEUE_NAME : $message")
 
         try {
-            orchestrator.scrape(message.url, message.accidentId)
+            orchestrator.scrape(message.url, message)
         } catch (ex: Exception) {
             logger.error("$ex")
         }

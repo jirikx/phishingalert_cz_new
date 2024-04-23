@@ -1,7 +1,7 @@
 package cz.phishingalert.core.controllers.admin.reporting
 
 import cz.phishingalert.core.RepositoryService
-import cz.phishingalert.core.configuration.ReportAuthor
+import cz.phishingalert.core.configuration.CoreConfig
 import cz.phishingalert.core.reportbuilders.QueryStringReportBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,13 +15,13 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 @RequestMapping(path = ["/admin"])
 class CloudflareController(
-    val reportAuthor: ReportAuthor,
+    val reportAuthor: CoreConfig.ReportAuthor,
     val repositoryService: RepositoryService) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     val submitUrl = "https://abuse.cloudflare.com/phishing"
 
     /**
-     * Sends the info about given accident identified by [accidentId] to the [authority] such as Cloudflare or Google
+     * Sends the info about given accident identified by [accidentId] to Cloudflare
      */
     @GetMapping(path = ["/submit/cloudflare/{accidentId}"])
     fun sendAccidentToAuthority(

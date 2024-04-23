@@ -1,4 +1,4 @@
-package cz.phishingalert.scraper.exporters
+package cz.phishingalert.scraper.exporters.models
 
 import cz.phishingalert.common.domain.*
 import cz.phishingalert.common.repository.*
@@ -10,10 +10,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import kotlin.math.exp
 
 /**
- * Take care of exporting given entities into the database
+ * Take care of exporting given models into the database
  */
 @Transactional
 @Component
@@ -24,7 +23,7 @@ class DatabaseExporter(
     val dnsRecordRepository: DnsRecordRepository,
     val moduleInfoRepository: ModuleInfoRepository,
     val sslCertificateRepository: SslCertificateRepository
-) : Exporter {
+) : ModelExporter {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun export(

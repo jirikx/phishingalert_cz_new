@@ -11,4 +11,6 @@ data class ScrapingMessage(
     @JsonProperty("accidentId") val accidentId: Int,
     @JsonProperty("url") val url: String,
     @JsonProperty("dateTime") val dateTime: String,
-    @JsonProperty("shouldCrawl") val shouldCrawl: Boolean)
+    @JsonProperty("shouldCrawl") val shouldCrawl: Boolean,
+    @JsonProperty("crawledDataPath") val crawledDataPath: String
+)
