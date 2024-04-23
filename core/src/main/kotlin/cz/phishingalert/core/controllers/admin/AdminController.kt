@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 class AdminController(val repositoryService: RepositoryService) {
     @GetMapping
     fun showAdminPanel(model: Model): String {
-        val accidents = repositoryService.readAllAccidents()
+        val accidents = repositoryService.readAllAccidents().sortedBy { it.id }
         model.addAttribute("accidents", accidents)
 
         return "admin/admin"

@@ -15,6 +15,7 @@
             <p class="col fw-bold">Website domain</p>
             <p class="col fw-bold">Confirmed?</p>
             <p class="col fw-bold">Date of report</p>
+            <p class="col fw-bold">Statistics</p>
             <p class="col fw-bold">Report button</p>
         </div>
     </div>
@@ -24,6 +25,7 @@
                 <p class="col" th:text="${accident.url}"></p>
                 <p class="col" th:text="${accident.confirmed}"></p>
                 <p class="col" th:text="${#temporals.format(accident.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
+                <a class="col" th:href="@{/admin/stats/{id}(id=${accident.id})}" th:text="'Stats of id=' + ${accident.id}"></a>
                 <div class="col dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Report website
