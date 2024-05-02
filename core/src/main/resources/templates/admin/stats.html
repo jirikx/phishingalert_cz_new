@@ -13,12 +13,12 @@
     <div th:each="accident: ${similarAccidents}">
         <div class="item">
             <div class="row">
-                <p class="col fw-bold" th:text="'Accident ID: ' + ${accident.id}"></p>
-                <p class="col fw-bold" th:text="${accident.url}"></p>
-                <p class="col fw-bold" th:text="${#temporals.format(accident.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
+                <p class="col fw-bold" th:text="'Accident ID: ' + ${accident.key.id}"></p>
+                <p class="col fw-bold" th:text="${accident.key.url}"></p>
+                <p class="col fw-bold" th:text="${#temporals.format(accident.key.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
                 <div class="container">
                     <p>Used modules:</p>
-                    <ul th:each="module: ${@repositoryService.readModuleInfosByAccidentId(accident.id)}">
+                    <ul th:each="module: ${accident.value}">
                         <li th:text="${module.name} + ', version: ' + ${module.version}"></li>
                     </ul>
                 </div>

@@ -22,7 +22,7 @@ class StatsController(
         model.addAttribute("websiteUrl", accident.url.toString())
         model.addAttribute(
             "similarAccidents",
-            repositoryService.getSimilarAccidents(accident).sortedBy { it.id })
+            repositoryService.getSimilarAccidents(accident))
         return ModelAndView("admin/stats")
     }
 }

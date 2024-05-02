@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin panel ⚙️</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <div class="container bg-light">
@@ -22,8 +23,15 @@
     <div th:each="accident: ${accidents}">
         <div class="item">
             <div class="row">
-                <p class="col" th:text="${accident.url}"></p>
-                <p class="col" th:text="${accident.confirmed}"></p>
+                <a class="col bordered" th:href="@{${accident.url}}" th:text="${accident.url}"></a>
+                <div class="col text-center">
+                    <div th:if="${accident.confirmed}">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div th:else>
+                        <i class="bi bi-ban"></i>
+                    </div>
+                </div>
                 <p class="col" th:text="${#temporals.format(accident.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
                 <a class="col" th:href="@{/admin/stats/{id}(id=${accident.id})}" th:text="'Stats of id=' + ${accident.id}"></a>
                 <div class="col dropdown">

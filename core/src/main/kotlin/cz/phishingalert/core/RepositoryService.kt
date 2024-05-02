@@ -2,11 +2,12 @@ package cz.phishingalert.core
 
 import cz.phishingalert.common.domain.*
 import cz.phishingalert.common.repository.*
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.exists
+import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.HashMap
 
 @Component
 @Transactional
@@ -57,11 +58,38 @@ class RepositoryService(
     }
 
     /**
-     * Get accidents which share some of the modules with [accident] and rank them
+     * Get accidents which share some of the modules with [accident] and rank them by their shared module count
      */
-    fun getSimilarAccidents(accident: PhishingAccident): Collection<PhishingAccident> {
-        //todo: implement filtering logic
-        return readAllAccidents()
+    fun getSimilarAccidents(accident: PhishingAccident): Map<PhishingAccident, Set<ModuleInfo>> {
+        if (accident.websiteId == null)
+            return emptyMap()
+        val website = websiteRepository.find(accident.websiteId!!) ?: return emptyMap()
+
+        // Get number of the shared modules for each website
+        val websitesBySharedModulesCount = WebsiteModuleInfos
+            .select(WebsiteModuleInfos.websiteId, WebsiteModuleInfos.moduleInfoId.countDistinct())
+            .where { WebsiteModuleInfos.websiteId neq website.id }
+            .andWhere { WebsiteModuleInfos.moduleInfoId inSubQuery WebsiteModuleInfos
+                .select(WebsiteModuleInfos.moduleInfoId)
+                .where { WebsiteModuleInfos.websiteId eq website.id }
+            }
+            .groupBy(WebsiteModuleInfos.websiteId)
+            .map { it[WebsiteModuleInfos.websiteId].value to it[WebsiteModuleInfos.moduleInfoId.countDistinct()] }
+            .sortedByDescending { it.second }
+            .map { it.first }
+
+        // Iterate through website IDs and map them to accident and module info
+        val result = mutableMapOf<PhishingAccident, MutableSet<ModuleInfo>>()   // Mutable map preserves the entry order
+        for (websiteId in websitesBySharedModulesCount) {
+            val foundAccident = phishingAccidentRepository.findByWebsiteId(websiteId)
+            if (foundAccident != null) {
+                val moduleInfos = moduleInfoRepository.findAllByWebsiteId(websiteId)
+                for (moduleInfo in moduleInfos)
+                    result.getOrPut(foundAccident) { mutableSetOf() }.add(moduleInfo)
+            }
+        }
+
+        return result
     }
 
     fun readAllAccidents(): Collection<PhishingAccident> =
