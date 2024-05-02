@@ -2,7 +2,6 @@ package cz.phishingalert.common.repository
 
 import cz.phishingalert.common.domain.PhishingAccident
 import cz.phishingalert.common.domain.PhishingAccidents
-import cz.phishingalert.common.domain.PhishingAccidents.sentDate
 import cz.phishingalert.common.domain.converters.PhishingAccidentConverter
 import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.*
@@ -38,6 +37,16 @@ class PhishingAccidentRepository :
             setProperties(it, entity)
         }
         return find(entity.id!!)
+    }
+
+    fun findByWebsiteId(websiteId: Int): PhishingAccident? {
+        val row = table.selectAll()
+            .where { table.website eq websiteId }
+            .limit(1).singleOrNull()
+
+        if (row != null)
+            return PhishingAccidentConverter.rowToRecord(row)
+        return null
     }
 
     fun findNewestByUrl(entity: PhishingAccident): PhishingAccident? {
