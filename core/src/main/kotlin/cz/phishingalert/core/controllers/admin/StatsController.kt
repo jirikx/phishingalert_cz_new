@@ -20,6 +20,7 @@ class StatsController(
             ?: return ModelAndView("error/404", HttpStatus.NOT_FOUND)
 
         model.addAttribute("websiteUrl", accident.url.toString())
+        model.addAttribute("repositoryService", repositoryService)
         model.addAttribute(
             "similarAccidents",
             repositoryService.getSimilarAccidents(accident))
