@@ -33,7 +33,7 @@ class WebsiteDownloader(
         val rootDomain = toRootDomain(url.host)
         var result = makeRDAPRequest(rootDomain)
         if (result == null) {
-            result = makeWhoIsRequest(rootDomain) ?: return emptyList()
+            result = makeWhoIsRequest(rootDomain) ?: return listOf(Website())   // return Website object without info
         }
 
         return listOf(result)
@@ -68,14 +68,16 @@ class WebsiteDownloader(
 
                 if (currentServer == null || !checkURL(currentServer))
                     break
+                if (currentServer.startsWith("www."))
+                    currentServer = currentServer.removePrefix("www.")
             }
 
             return WebsiteInfoParser.parseWhoIs(results)
         } catch (ex: SocketException) {
-            logger.error("Problem with connection to the WhoIs server: ${ex.message}")
+            logger.error("Problem with connection to the WhoIs server: $ex")
             return null
         } catch (ex: IOException) {
-            logger.error("Problem with IO during WhoIs request: ${ex.message}")
+            logger.error("Problem with IO during WhoIs request: $ex")
             return null
         } finally {
             whoIsClient.disconnect()

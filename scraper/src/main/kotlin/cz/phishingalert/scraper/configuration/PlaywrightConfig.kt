@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class PlaywrightConfig {
     fun options(): BrowserType.LaunchPersistentContextOptions {
         return BrowserType.LaunchPersistentContextOptions()
-            .setSlowMo(50.0)
+            .setSlowMo(1.0)
             .setAcceptDownloads(true)
             .setHeadless(true)
             .setLocale("cs-CZ")

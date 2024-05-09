@@ -30,7 +30,7 @@ class CloudflareController(
         val queryString = createQueryString(accidentId)
 
         if (queryString == null) {
-            logger.warn("Can't report phishing accident with $accidentId because it wasn't found!")
+            logger.error("Can't report phishing accident with $accidentId because it wasn't found!")
             return ModelAndView("error/404", HttpStatus.NOT_FOUND)
         }
 
@@ -58,7 +58,9 @@ class CloudflareController(
         if (accident.sourcePhoneNumber != null && accident.sourcePhoneNumber!!.isNotBlank())
             queryStringReportBuilder.addParameter("justification", "It was sent via phone number: ${accident.sourcePhoneNumber!!}")
 
-        // Utilise website's data if it exists
+        // Utilise website's data only if it exists
+        if (accident.websiteId == null)
+            return queryStringReportBuilder.getQuery()
         val website = repositoryService.readWebsiteById(accident.websiteId!!) ?: return queryStringReportBuilder.getQuery()
         queryStringReportBuilder.addParameter(
             "justification",

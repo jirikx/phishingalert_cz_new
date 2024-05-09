@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "settings")
 data class CoreConfig(
     val reportAuthor: ReportAuthor,
-    val sftpDirectory: String
+    val sftpDirectory: String,
+    val minTimeDiff: Int,
+    val requireEmailConfirmation: Boolean
 ) {
     @ConfigurationProperties(prefix = "settings.report-author")
     data class ReportAuthor(

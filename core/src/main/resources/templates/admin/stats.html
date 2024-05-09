@@ -22,7 +22,7 @@
                         <li th:text="${module.name} + ', version: ' + ${module.version}"></li>
                     </ul>
                     <p>DNS records:</p>
-                    <ul th:each="dnsRecord: ${repositoryService.readDnsRecordsByWebsiteId(accident.key.id)}">
+                    <ul th:each="dnsRecord: ${repositoryService.readDnsRecordsByWebsiteId(accident.key.websiteId)}">
                         <li th:text="${dnsRecord.name} + ', ' + ${dnsRecord.ipAddress}"></li>
                     </ul>
                 </div>

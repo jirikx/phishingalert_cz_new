@@ -14,12 +14,12 @@ abstract class Crawler {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     /**
-     * Crawl the website starting at given url
+     * Crawl the website starting at given [originalUrl] and store the results into the [downloadDir]
      */
-    abstract fun crawl(url: URL, downloadDir: Path)
+    abstract fun crawl(originalUrl: URL, downloadDir: Path)
 
     /**
-     * Download files from the given set of URIs and store them into the directory
+     * Download files from the given set of URIs ([uris]) and store them into the [downloadDir]
      */
     fun downloadFromUris(uris: Set<URI>, downloadDir: Path) {
         for (uri in uris) {
@@ -43,12 +43,22 @@ abstract class Crawler {
 
     }
 
+    /**
+     * Create working URI which is combined from [url] and [rawUrl]
+     */
     fun fixUri(url: String, rawUrl: String): URI? {
+        // Clean the URL from # or ? tags
+        var fixedUrl = url
+        val tagPosition = fixedUrl.indexOfFirst { it == '#' || it == '?' }
+        if (tagPosition != -1)
+            fixedUrl = fixedUrl.removeRange(tagPosition, fixedUrl.length)
+
         val fixed = when {
             rawUrl.startsWith("http") -> rawUrl
+            rawUrl.startsWith("resource:") -> return null   // Resource URLs are browser's internal matter, don't visit them
             rawUrl.startsWith("//") -> "https:$rawUrl"
-            rawUrl.startsWith("/") -> "$url$rawUrl"
-            else -> "$url/$rawUrl"
+            rawUrl.startsWith("/") -> "$fixedUrl$rawUrl"
+            else -> "$fixedUrl/$rawUrl"
         }
 
         return try {
@@ -59,7 +69,7 @@ abstract class Crawler {
     }
 
     /**
-     * Parse the raw URIs and turn them into correct "clickable" format
+     * Parse the raw URLs and turn them into correct "clickable" format
      */
     fun fixUris(url: String, rawUrls: Set<String>): Set<URI> {
         val result = HashSet<URI>()

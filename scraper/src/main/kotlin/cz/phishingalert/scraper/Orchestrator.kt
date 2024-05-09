@@ -1,6 +1,7 @@
 package cz.phishingalert.scraper
 
 import com.microsoft.playwright.Playwright
+import cz.phishingalert.common.domain.ModuleInfo
 import cz.phishingalert.common.messagequeue.ScrapingMessage
 import cz.phishingalert.scraper.configuration.AppConfig
 import cz.phishingalert.scraper.configuration.PlaywrightConfig
@@ -57,7 +58,10 @@ class Orchestrator(
         playwrightInstance.use { playwright ->
             // Download modules info
             val moduleDownloader = ModuleDownloader(playwright)
-            val usedModules = moduleDownloader.download(url)
+            var usedModules = emptyList<ModuleInfo>()
+            moduleDownloader.use {
+                usedModules = it.download(url)
+            }
 
             // Crawl the website
             val crawler = PlaywrightCrawler(playwright, playwrightConfig.options(), appConfig.crawlerConfig)

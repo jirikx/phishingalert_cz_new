@@ -21,8 +21,6 @@ import java.net.URL
 import java.time.Duration
 import java.time.LocalDateTime
 
-const val MIN_TIME_DIFF = 500  // in minutes
-
 @Controller
 class WebFormController(
     val messageQueueSender: MessageQueueSender,
@@ -70,7 +68,7 @@ class WebFormController(
 
         // Check if the time limit between similar accident reporting already passed
         val timeDiff = Duration.between(repositoryService.timeOfLastSimilarAccident(accident), LocalDateTime.now())
-        if (timeDiff.toMinutes() < MIN_TIME_DIFF)
+        if (timeDiff.toMinutes() < config.minTimeDiff)
             shouldCrawl = false
 
         val accidentId = repositoryService.save(author, accident)

@@ -5,6 +5,8 @@ settings:
     company:
     phoneNumber: ccd
   sftpDirectory: /sftp_user
+  minTimeDiff: 500  # minimal time difference (in minutes) between 2 consecutive crawling of the same URL
+  requireEmailConfirmation: false
 
 spring:
   datasource:
