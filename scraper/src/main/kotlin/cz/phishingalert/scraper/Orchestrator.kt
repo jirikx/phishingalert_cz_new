@@ -63,16 +63,22 @@ class Orchestrator(
                 usedModules = it.download(url)
             }
 
-            // Crawl the website
+            // Prepare the crawler
             val crawler = PlaywrightCrawler(playwright, playwrightConfig.options(), appConfig.crawlerConfig)
-            crawler.crawl(url, dir)
 
             // Export the results
             if (scrapingMessage == null) {
+                crawler.crawl(url, dir)
                 websiteInfo.first().fileSystemPath = dir.toString()
                 exporter.export(websiteInfo.first(), dnsRecords, usedModules, certs)
             } else {
-                websiteInfo.first().fileSystemPath = File(scrapingMessage.crawledDataPath).resolve(dir.name).toString()
+                if (scrapingMessage.shouldCrawl) {
+                    crawler.crawl(url, dir)
+                    websiteInfo.first().fileSystemPath = File(scrapingMessage.crawledDataPath).resolve(dir.name).toString()
+                } else {
+                    websiteInfo.first().fileSystemPath = "NOT_CRAWLED"
+                }
+
                 exporter.export(scrapingMessage.accidentId, websiteInfo.first(), dnsRecords, usedModules, certs)
 
                 // Transfer crawled data to the Core
