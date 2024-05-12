@@ -2,7 +2,7 @@ package cz.phishingalert.core.controllers
 
 import cz.phishingalert.common.domain.Author
 import cz.phishingalert.common.domain.PhishingAccident
-import cz.phishingalert.core.MessageQueueSender
+import cz.phishingalert.core.communication.MessageQueueSender
 import cz.phishingalert.core.RepositoryService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +33,8 @@ class WebFormControllerTest {
             "note",
             null,
             "+420",
-            1)
+            1
+        )
 
         val request = post("/submitForm")
             .accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)

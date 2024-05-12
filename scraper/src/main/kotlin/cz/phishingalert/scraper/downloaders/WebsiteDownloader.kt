@@ -61,9 +61,9 @@ class WebsiteDownloader(
         try {
             var redirectCount = 0
             while (currentServer != previousServer && redirectCount++ < MAX_REDIRECT_COUNT) {
-                previousServer = currentServer
                 whoIsClient.connect(currentServer, WHOIS_PORT)
                 results = whoIsClient.query(domain).trimIndent()
+                previousServer = currentServer
                 currentServer = commonRegex.find(results)?.groupValues?.get(1)
 
                 if (currentServer == null || !checkURL(currentServer))

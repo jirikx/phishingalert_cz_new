@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
+const val CLOUDFLARE_SUBMIT_URL = "https://abuse.cloudflare.com/phishing"
+
 @Controller
 @RequestMapping(path = ["/admin"])
 class CloudflareController(
     val reportAuthor: CoreConfig.ReportAuthor,
     val repositoryService: RepositoryService) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    val submitUrl = "https://abuse.cloudflare.com/phishing"
 
     /**
      * Sends the info about given accident identified by [accidentId] to Cloudflare
@@ -34,7 +35,7 @@ class CloudflareController(
             return ModelAndView("error/404", HttpStatus.NOT_FOUND)
         }
 
-        return ModelAndView("redirect:$submitUrl$queryString")
+        return ModelAndView("redirect:$CLOUDFLARE_SUBMIT_URL$queryString")
     }
 
     /**
@@ -48,8 +49,9 @@ class CloudflareController(
             logger.error("Phishing accident with id=$accidentId couldn't be found!")
             return null
         }
-
         addAuthorToQuery(queryStringReportBuilder)
+
+        // Add data reported by the original author
         queryStringReportBuilder.addParameter("urls", accident.url.toString())
         if (accident.noteText != null)
             queryStringReportBuilder.addParameter("comments", accident.noteText!!)

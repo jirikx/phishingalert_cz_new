@@ -1,7 +1,6 @@
 package cz.phishingalert.core
 
 import cz.phishingalert.common.domain.*
-import org.jetbrains.exposed.sql.not
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,7 +25,17 @@ class TestUtils {
             sourcePhoneNumber: String? = null,
             authorId: Int = 0,
             websiteId: Int? = null
-        ) = PhishingAccident(id, URL(url), sentDate, confirmed, noteText, sourceEmail, sourcePhoneNumber, authorId, websiteId)
+        ) = PhishingAccident(
+            id,
+            URL(url),
+            sentDate,
+            confirmed,
+            noteText,
+            sourceEmail,
+            sourcePhoneNumber,
+            authorId,
+            websiteId
+        )
 
         fun createSampleMessageInfo(
             id: Int = 0,

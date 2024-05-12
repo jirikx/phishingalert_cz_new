@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.HashMap
 
 @Component
 @Transactional
@@ -50,6 +49,9 @@ class RepositoryService(
         return insertedAccident.id
     }
 
+    /**
+     * Return date time of the newest accident which pointed to the same URL as the given [accident]
+     */
     fun timeOfLastSimilarAccident(accident: PhishingAccident): LocalDateTime {
         createTablesIfNotExist()
         val lastSimilarAccident = phishingAccidentRepository.findNewestByUrl(accident) ?: return LocalDateTime.MIN
@@ -91,6 +93,14 @@ class RepositoryService(
 
         return result
     }
+
+    fun confirmAccident(accident: PhishingAccident): PhishingAccident? {
+        accident.confirmed = true
+        return phishingAccidentRepository.update(accident)
+    }
+
+    fun readAccidentByGuid(guid: UUID): PhishingAccident? =
+        phishingAccidentRepository.findByGuid(guid)
 
     fun readAllAccidents(): Collection<PhishingAccident> =
         phishingAccidentRepository.findAll()

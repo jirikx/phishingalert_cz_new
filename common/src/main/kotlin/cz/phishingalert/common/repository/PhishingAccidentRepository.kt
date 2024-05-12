@@ -7,6 +7,7 @@ import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 class PhishingAccidentRepository :
@@ -20,6 +21,7 @@ class PhishingAccidentRepository :
         it[sourcePhoneNumber] = entity.sourcePhoneNumber
         it[author] = entity.authorId
         it[website] = entity.websiteId
+        it[guid] = entity.guid
     }
 
     override fun create(entity: PhishingAccident): PhishingAccident? {
@@ -53,6 +55,16 @@ class PhishingAccidentRepository :
         val row = table.selectAll()
             .where { table.url eq entity.url.toString() }
             .orderBy(table.id, SortOrder.DESC)
+            .limit(1).singleOrNull()
+
+        if (row != null)
+            return PhishingAccidentConverter.rowToRecord(row)
+        return null
+    }
+
+    fun findByGuid(accidentGuid: UUID): PhishingAccident? {
+        val row = table.selectAll()
+            .where { table.guid eq accidentGuid }
             .limit(1).singleOrNull()
 
         if (row != null)

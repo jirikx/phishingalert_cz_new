@@ -32,7 +32,7 @@
                         <div th:if="${accident.confirmed}">
                             <i class="bi bi-check-circle"></i>
                         </div>
-                        <div th:else>
+                        <div th:unless="${accident.confirmed}">
                             <i class="bi bi-ban"></i>
                         </div>
                     </td>
