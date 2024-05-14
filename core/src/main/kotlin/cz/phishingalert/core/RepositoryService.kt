@@ -108,6 +108,20 @@ class RepositoryService(
     fun readAccidentById(id: Int): PhishingAccident? =
         phishingAccidentRepository.find(id)
 
+    fun readAccidentsByAuthorEmail(email: String): List<PhishingAccident> {
+        val authors = authorRepository.findAllByEmail(email)
+        val result = mutableListOf<PhishingAccident>()
+
+        for (author in authors)
+            if (author.id != null)
+                phishingAccidentRepository.findByAuthorId(author.id!!)?.let { result.add(it) }
+
+        return result
+    }
+
+    fun readAuthorById(id: Int): Author? =
+        authorRepository.find(id)
+
     fun readWebsiteById(id: Int): Website? =
         websiteRepository.find(id)
 

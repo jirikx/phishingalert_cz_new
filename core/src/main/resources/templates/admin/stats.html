@@ -8,27 +8,57 @@
 </head>
 <body>
 <div class="container bg-light">
-    <h1 class="text-center" th:text="'Similar reports to ' + ${websiteUrl}"></h1>
-    <hr/>
-    <div th:each="accident: ${similarAccidents}">
-        <div class="item">
-            <div class="row">
-                <p class="col fw-bold" th:text="'Accident ID: ' + ${accident.key.id}"></p>
-                <p class="col fw-bold" th:text="${accident.key.url}"></p>
-                <p class="col fw-bold" th:text="${#temporals.format(accident.key.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
-                <div class="container">
-                    <p>Used modules:</p>
-                    <ul th:each="module: ${accident.value}">
-                        <li th:text="${module.name} + ', version: ' + ${module.version}"></li>
-                    </ul>
-                    <p>DNS records:</p>
-                    <ul th:each="dnsRecord: ${repositoryService.readDnsRecordsByWebsiteId(accident.key.websiteId)}">
-                        <li th:text="${dnsRecord.name} + ', ' + ${dnsRecord.ipAddress}"></li>
-                    </ul>
-                </div>
+    <h1 class="text-center" th:text="'Statistics for accident with ID ' + ${accident.id}"></h1>
+    <div class="row">
+        <div class="card col-sm">
+            <div class="card-body">
+                <h5 class="card-title">Author info</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="'Name: ' + ${author.name}"></li>
+                    <li class="list-group-item" th:text="'ID: ' + ${author.id}"></li>
+                    <li class="list-group-item">Email: <a th:href="'mailto:' + ${author.email}" th:text="${author.email}"></a></li>
+                    <li class="list-group-item" th:text="'User agent: ' + ${author.userAgent}"></li>
+                    <li class="list-group-item" th:text="'IP: ' + ${author.ipAddress}"></li>
+                </ul>
+                <a class="btn btn-primary" th:href="@{/admin/stats/user/{email}(email=${author.email})}">Reports from this author</a>
             </div>
         </div>
+        <div class="card col-sm">
+            <div class="card-body">
+                <h5 class="card-title">Accident info</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">URL: <a th:href="@{${accident.url}}" th:text="${accident.url}"></a></li>
+                    <li class="list-group-item" th:text="'Delivered at: ' + ${#temporals.format(accident.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></li>
+                    <li class="list-group-item">Phishing source: <a th:href="'mailto:' + ${accident.sourceEmail}" th:text="${accident.sourceEmail}"></a></li>
+                    <li class="list-group-item" th:text="'Note: ' + ${accident.noteText}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h2 class="text-center">Similar reported accidents</h2>
         <hr/>
+        <div th:each="similarAccident: ${similarAccidents}">
+            <div class="item">
+                <div class="row">
+                    <p class="col fw-bold" th:text="'Accident ID: ' + ${similarAccident.key.id}"></p>
+                    <p class="col fw-bold" th:text="${similarAccident.key.url}"></p>
+                    <p class="col fw-bold" th:text="${#temporals.format(similarAccident.key.sentDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
+                    <div class="container">
+                        <p class ="fw-bold">Used modules:</p>
+                        <ul th:each="module: ${similarAccident.value}">
+                            <li th:text="${module.name} + ', version: ' + ${module.version}"></li>
+                        </ul>
+                        <p class="fw-bold">DNS records:</p>
+                        <ul th:each="dnsRecord: ${repositoryService.readDnsRecordsByWebsiteId(similarAccident.key.websiteId)}">
+                            <li th:text="${dnsRecord.name} + ', ' + ${dnsRecord.ipAddress}"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+        </div>
     </div>
 
 </div>

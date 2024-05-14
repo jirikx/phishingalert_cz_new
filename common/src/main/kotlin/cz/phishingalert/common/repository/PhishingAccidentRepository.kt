@@ -71,4 +71,14 @@ class PhishingAccidentRepository :
             return PhishingAccidentConverter.rowToRecord(row)
         return null
     }
+
+    fun findByAuthorId(authorId: Int): PhishingAccident? {
+        val row = table.selectAll()
+            .where { table.author eq authorId }
+            .limit(1).singleOrNull()
+
+        if (row != null)
+            return PhishingAccidentConverter.rowToRecord(row)
+        return null
+    }
 }

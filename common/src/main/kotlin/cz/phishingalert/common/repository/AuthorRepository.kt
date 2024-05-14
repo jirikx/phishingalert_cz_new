@@ -5,6 +5,7 @@ import cz.phishingalert.common.domain.Authors
 import cz.phishingalert.common.domain.converters.AuthorConverter
 import cz.phishingalert.common.repository.generic.IntTableRepository
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.selectAll
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -17,5 +18,17 @@ class AuthorRepository : IntTableRepository<Author, Authors>(Authors, AuthorConv
             it[ipAddress] = entity.ipAddress
         }.value
         return entity
+    }
+
+    fun findAllByEmail(email: String): List<Author> {
+        val rows = table.selectAll()
+            .where { table.email eq email }
+            .toList()
+
+        val result = mutableListOf<Author>()
+        for (row in rows)
+            result.add(AuthorConverter.rowToRecord(row))
+
+        return result
     }
 }
