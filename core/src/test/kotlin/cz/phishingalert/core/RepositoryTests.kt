@@ -2,18 +2,27 @@ package cz.phishingalert.core
 
 import cz.phishingalert.common.domain.*
 import cz.phishingalert.common.repository.*
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 
-@SpringBootTest
+@SpringBootTest(
+    classes = [TestConfig::class],
+)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class RepositoryTests{
     @Autowired private lateinit var authorRepository: AuthorRepository
     @Autowired private lateinit var dnsRepository: DnsRecordRepository
@@ -22,9 +31,11 @@ class RepositoryTests{
     @Autowired private lateinit var sslCertificateRepository: SslCertificateRepository
     @Autowired private lateinit var websiteRepository: WebsiteRepository
 
-    @BeforeAll
+    @BeforeEach
     fun setup() {
+        Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "org.h2.Driver", "sa", "password")
         transaction {
+            SchemaUtils.dropDatabase()
             SchemaUtils.create(Authors)
             SchemaUtils.create(PhishingAccidents)
             SchemaUtils.create(Websites)
@@ -35,34 +46,10 @@ class RepositoryTests{
         }
     }
 
-    @Test
-    fun createJustAuthorTest() {
-        val author = TestUtils.createSampleAuthor()
-
+    @AfterEach
+    fun cleanup() {
         transaction {
-            val inserted = authorRepository.create(author)
-            val res = authorRepository.findAll()
-            author.id = inserted!!.id
-
-            assert(res.isNotEmpty())
-            assertEquals(author, inserted)
-        }
-    }
-
-    @Test
-    fun createPhishingAccidentTest() {
-        val author = TestUtils.createSampleAuthor()
-
-        transaction {
-            val insertedAuthor = authorRepository.create(author)
-            assertNotNull(insertedAuthor)
-
-            val accident = TestUtils.createSampleAccident(authorId = insertedAuthor!!.id!!)
-
-            val insertedAccident = phishingAccidentRepository.create(accident)
-            accident.id = insertedAccident!!.id
-
-            assertEquals(accident, insertedAccident)
+            SchemaUtils.dropSchema()
         }
     }
 
@@ -94,8 +81,38 @@ class RepositoryTests{
 
 
         }
+    }
 
+    @Test
+    fun createJustAuthorTest() {
+        val author = TestUtils.createSampleAuthor()
 
+        transaction {
+            SchemaUtils.create(Authors)
+            val inserted = authorRepository.create(author)
+            val res = authorRepository.findAll()
+            author.id = inserted!!.id
+
+            assert(res.isNotEmpty())
+            assertEquals(author, inserted)
+        }
+    }
+
+    @Test
+    fun createPhishingAccidentTest() {
+        val author = TestUtils.createSampleAuthor()
+
+        transaction {
+            val insertedAuthor = authorRepository.create(author)
+            assertNotNull(insertedAuthor)
+
+            val accident = TestUtils.createSampleAccident(authorId = insertedAuthor!!.id!!)
+
+            val insertedAccident = phishingAccidentRepository.create(accident)
+            accident.id = insertedAccident!!.id
+
+            assertEquals(accident, insertedAccident)
+        }
     }
 
 

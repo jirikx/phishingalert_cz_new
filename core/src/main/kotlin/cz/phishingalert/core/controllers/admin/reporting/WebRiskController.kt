@@ -27,19 +27,16 @@ import com.google.webrisk.v1.Submission
 import com.google.webrisk.v1.SubmitUriRequest
 import com.google.webrisk.v1.ThreatInfo
 import com.google.longrunning.Operation
-import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.core.services.RepositoryService
 import cz.phishingalert.core.configuration.CoreConfig
-import io.grpc.StatusRuntimeException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
-import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 
 @Controller

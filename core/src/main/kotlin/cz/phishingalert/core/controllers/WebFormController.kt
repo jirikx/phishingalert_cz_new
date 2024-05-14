@@ -5,7 +5,7 @@ import cz.phishingalert.common.domain.Author
 import cz.phishingalert.common.domain.PhishingAccident
 import cz.phishingalert.core.communication.EmailSender
 import cz.phishingalert.core.communication.MessageQueueSender
-import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.core.services.RepositoryService
 import cz.phishingalert.core.configuration.CoreConfig
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger

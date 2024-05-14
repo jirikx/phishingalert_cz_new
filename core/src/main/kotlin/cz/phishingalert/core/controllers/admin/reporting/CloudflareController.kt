@@ -1,6 +1,6 @@
 package cz.phishingalert.core.controllers.admin.reporting
 
-import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.core.services.RepositoryService
 import cz.phishingalert.core.configuration.CoreConfig
 import cz.phishingalert.core.reportbuilders.QueryStringReportBuilder
 import org.slf4j.Logger
@@ -18,7 +18,8 @@ const val CLOUDFLARE_SUBMIT_URL = "https://abuse.cloudflare.com/phishing"
 @RequestMapping(path = ["/admin"])
 class CloudflareController(
     val reportAuthor: CoreConfig.ReportAuthor,
-    val repositoryService: RepositoryService) {
+    val repositoryService: RepositoryService
+) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     /**
