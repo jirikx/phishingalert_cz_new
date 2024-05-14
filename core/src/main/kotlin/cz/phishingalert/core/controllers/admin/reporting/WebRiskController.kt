@@ -15,6 +15,7 @@
  *
  * Part of the used code in this file was taken from:
  * https://github.com/GoogleCloudPlatform/java-docs-samples/blob/main/webrisk/src/main/java/webrisk/SubmitUri.java
+ * and is marked as such with the comments.
  * The rest is the creation of the author of this program.
  */
 
@@ -59,6 +60,7 @@ class WebRiskController(
         val uri = repositoryService.readAccidentById(accidentId)?.url?.toString()
             ?: return ModelAndView("error/404", HttpStatus.NOT_FOUND)
 
+        //------------------ Part of the code from Google LLC starts here ------------------
         val webRiskServiceClient = WebRiskServiceClient.create()
         try {
             // Build the Submission object
@@ -82,6 +84,8 @@ class WebRiskController(
                 // Try to submit the URL to the Google WebRisk
                 val submissionResponse: Operation = webRiskServiceClient.submitUriCallable()
                     .futureCall(submitUriRequest).get(config.googleCloudConnectionTimeout, TimeUnit.SECONDS)
+        
+        //------------------ Part of the code from Google LLC ends here ------------------
                 logger.info("Response from Google: $submissionResponse")
                 return ModelAndView("success")
             } catch (ex: Exception) {
