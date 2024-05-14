@@ -8,7 +8,7 @@ interface CrudRepository<MODEL, ID> {
      * Create the row from given model
      * @return the created model, null if it couldn't be created
      */
-    fun create(entity: MODEL): MODEL
+    fun create(entity: MODEL): MODEL?
 
     /**
      * Find the row with the given id and transform it to the correct ENTITY type

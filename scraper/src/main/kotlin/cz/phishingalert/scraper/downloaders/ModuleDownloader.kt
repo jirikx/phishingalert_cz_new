@@ -1,5 +1,6 @@
 package cz.phishingalert.scraper.downloaders
 
+import com.microsoft.playwright.Browser
 import com.microsoft.playwright.Playwright
 import cz.phishingalert.common.domain.ModuleInfo
 import cz.phishingalert.common.domain.ModuleType
@@ -8,16 +9,21 @@ import org.springframework.util.ResourceUtils
 import java.io.FileInputStream
 import java.net.URL
 
-@Component
-class ModuleDownloader(val playwright: Playwright) : Downloader<ModuleInfo>() {
+class ModuleDownloader(
+    val playwright: Playwright,
+    val browser: Browser? = playwright.firefox().launch()
+) : Downloader<ModuleInfo>(), AutoCloseable {
     override fun download(url: URL): List<ModuleInfo> {
         // https://github.com/johnmichel/Library-Detector-for-Chrome/blob/master/library/libraries.js
-        val browser = playwright.firefox().launch()
-
         val libraries = loadResources("classpath:libraries.js")
 
         val libraryName = Regex("'([^']+?)': \\{")
         val matches = libraryName.findAll(libraries)
+
+        if (browser == null) {
+            logger.error("Couldn't identificate used modules because the browser instance is null!")
+            return emptyList()
+        }
 
         val page = browser.newPage()
         page.navigate(url.toString())
@@ -40,12 +46,8 @@ class ModuleDownloader(val playwright: Playwright) : Downloader<ModuleInfo>() {
             }
         }
 
-        //todo https://github.com/enthec/webappanalyzer
-        // https://github.com/micmro/Stylify-Me
-
         page.close()
         return results.toList()
-        // check Angular: https://github.com/rangle/augury/blob/master/src/backend/utils/app-check.ts
     }
 
     fun loadResources(path: String): String {
@@ -69,5 +71,9 @@ class ModuleDownloader(val playwright: Playwright) : Downloader<ModuleInfo>() {
             return version
         } else
             return "error"
+    }
+
+    override fun close() {
+        browser?.close()
     }
 }

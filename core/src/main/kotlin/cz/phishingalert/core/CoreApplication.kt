@@ -1,28 +1,14 @@
 package cz.phishingalert.core
 
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.boot.ApplicationRunner
+import cz.phishingalert.core.configuration.CoreConfig
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
 
 
-
-@SpringBootApplication
-class CoreApplication {
-	@Bean
-	fun myQueue(): Queue {
-		return Queue("myQueue", false)
-	}
-
-	@Bean
-	fun runner(template: RabbitTemplate): ApplicationRunner {
-		return ApplicationRunner {
-			template.convertAndSend("myQueue", "Hello there :)")
-		}
-	}
-}
+@SpringBootApplication(scanBasePackages = ["cz.phishingalert"])
+@EnableConfigurationProperties(CoreConfig::class, CoreConfig.ReportAuthor::class)
+class CoreApplication
 
 fun main(args: Array<String>) {
 	runApplication<CoreApplication>(*args)

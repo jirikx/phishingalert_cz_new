@@ -18,7 +18,7 @@ object WebsiteInfoParser {
     /**
      * Parse the raw WhoIs query result and save it into the related class
      */
-    fun parseWhoIs(rawWhoIs: String): Website? {
+    fun parseWhoIs(rawWhoIs: String): Website {
         val options = setOf(RegexOption.MULTILINE, RegexOption.IGNORE_CASE)
 
         // Regexes for given keywords in the WhoIs query
@@ -30,7 +30,6 @@ object WebsiteInfoParser {
         val expires = Regex("expir[^:]*:\\s*(.*)\$", options).find(rawWhoIs)
 
         val website = Website(
-            null,
             null,
             (holder?.groups?.get(1)?.value ?: "unknown"),
             (registrar?.groups?.get(1)?.value ?: "unknown"),
@@ -91,7 +90,7 @@ object WebsiteInfoParser {
         }
 
         // Use the domain name in LDH form ("ldhName") if the registrant wasn't written in the "entities" field
-        if (website.domainHolder == null) {
+        if (website.domainHolder == "unknown") {
             website.domainHolder = jsonResponse["ldhName"]?.toString() ?: "unknown"
         }
 

@@ -4,8 +4,8 @@ plugins {
 	id("org.springframework.boot") version "3.2.3"
 	id("io.spring.dependency-management") version "1.1.4"
 	kotlin("jvm") version "1.9.22"
+	kotlin("plugin.serialization") version "1.9.22"
 	kotlin("plugin.spring") version "1.9.22"
-	kotlin("plugin.jpa") version "1.9.22"
 }
 
 group = "cz.phishingalert"
@@ -20,11 +20,20 @@ repositories {
 }
 
 dependencies {
+	implementation(project(":common"))
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.springframework.boot:spring-boot-starter-tomcat")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework:spring-webmvc")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.49.0")
+	implementation("org.postgresql:postgresql")
+	implementation("com.google.cloud:google-cloud-webrisk:2.41.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
+	testImplementation("org.mockito:mockito-core")
+	testImplementation("com.h2database:h2:2.2.224")
 }
 
 tasks.withType<KotlinCompile> {

@@ -25,8 +25,7 @@ private const val MAX_REDIRECT_COUNT = 3
 
 @Component
 class WebsiteDownloader(
-    val appConfig: AppConfig,
-    val playwright: Playwright
+    val appConfig: AppConfig
 ) : Downloader<Website>() {
 
     override fun download(url: URL): List<Website> {
@@ -34,10 +33,9 @@ class WebsiteDownloader(
         val rootDomain = toRootDomain(url.host)
         var result = makeRDAPRequest(rootDomain)
         if (result == null) {
-            result = makeWhoIsRequest(rootDomain) ?: return emptyList()
+            result = makeWhoIsRequest(rootDomain) ?: return listOf(Website())   // return Website object without info
         }
 
-        result.url = url
         return listOf(result)
     }
 
@@ -63,21 +61,23 @@ class WebsiteDownloader(
         try {
             var redirectCount = 0
             while (currentServer != previousServer && redirectCount++ < MAX_REDIRECT_COUNT) {
-                previousServer = currentServer
                 whoIsClient.connect(currentServer, WHOIS_PORT)
                 results = whoIsClient.query(domain).trimIndent()
+                previousServer = currentServer
                 currentServer = commonRegex.find(results)?.groupValues?.get(1)
 
                 if (currentServer == null || !checkURL(currentServer))
                     break
+                if (currentServer.startsWith("www."))
+                    currentServer = currentServer.removePrefix("www.")
             }
 
             return WebsiteInfoParser.parseWhoIs(results)
         } catch (ex: SocketException) {
-            logger.error("Problem with connection to the WhoIs server: ${ex.message}")
+            logger.error("Problem with connection to the WhoIs server: $ex")
             return null
         } catch (ex: IOException) {
-            logger.error("Problem with IO during WhoIs request: ${ex.message}")
+            logger.error("Problem with IO during WhoIs request: $ex")
             return null
         } finally {
             whoIsClient.disconnect()
@@ -89,7 +89,6 @@ class WebsiteDownloader(
      * Make RDAP request with a HttpClient
      */
     fun makeRDAPRequest(domain: String): Website? {
-        logger.warn("DOMAIN RDAP: $domain")
         val client = HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.ALWAYS).build()
         val request = HttpRequest.newBuilder()
