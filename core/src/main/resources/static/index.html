@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing alert</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- partial:index.partial.html -->
+            <div class="form-body">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h1>Phishing alert TEST</h1>
+                            <p>O phishingu už asi slyšeli všichni. Každý den se ve sdělovacích prostředcích dozvídáme o
+                                dalších a dalších případech. Útočníci se neustále zdokonalují a využívají těžkopádnosti
+                                systému. </p>
+                            <p>Proto vznikla tato stránka - princip je jednoduchý - pokud se s
+                                phishingem setkáte, nahlaste nám ho, my se postaráme o to, že o tom informujeme
+                                správná místa. Cílem je maximálně urychlit
+                                blokaci domén, na kterých se phishing nachází a tak chránit ostatní.</p>
+                            <p>Pokud dobře
+                                nevíte, co děláte, na phishingové odkazy nikdy neklikejte!</p>
+                            <h2>Jak to funguje?</h2>
+                            <p>Po odeslání Vám přijde na e-mail potvrzovací link, proces se spustí až po potvrzení, je
+                                to ochrana proti botům.</p>
+                            <p>Nejprve se porovná, jestli už stejné hlášení nemáme, pokud ne, webscraperem uložíme obsah
+                                webu pro pozdější zkoumání. Uložíme DNS záznamy pro danou doménu a IP adresy cílového
+                                webserveru. Nakonec předáme informaci o potenciálním phishingu na potřebná místa.</p>
+                            <p>Pokud máte zájem o přístup k námi sbíraným datům, <a
+                                    href="mailto:marek.susicky@sec4good.cz">napište</a>.</p>
+                            <form action="/submitForm" method="POST" class="requires-validation"
+                                  autocomplete="false" novalidate>
+                                <h3>Informace o Vás - na e-mail přijde potvrzení</h3>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Vaše jméno - nebude nikde figurovat"></i>
+                                        <label for="name-author" class="form-label">Vaše jméno</label>
+                                        <input type="text" class="form-control" id="name-author" name="name_author"
+                                               maxlength="50" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Váš e-mail, na který zašleme aktivační link, bez něhož nebo napište do poznámky"></i>
+                                        <label for="email-author" class="form-label">Váš e-mail</label>
+                                        <input type="email" class="form-control" id="email-author" name="email_author"
+                                               maxlength="100"
+                                               required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <h3>Informace o phishingu</h3>
+                                <p>Vyplňte relevantní informace</p>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Zadejte e-mailovou adresu, z které Vám přišel první kontakt. Pokud jich máte více, uveďte je do poznámky, nebo pošlete další hlášení "></i>
+                                        <label for="email" class="form-label">E-mail (iniciální kontakt)</label>
+                                        <input type="email" class="form-control" id="email" name="email" maxlength="50"
+                                               onchange="toggleEmailInputBox()" autocomplete="none">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Zadejte telefonní číslo, z kterého Vám píší, případně volají. Pokud máte čísel více, pošlete prosím více hlášení, nebo napište do poznámky"></i>
+                                        <label for="phone" class="form-label">Telefon (volající-SMS-WhatsApp)</label>
+                                        <input type="phone" class="form-control" id="phone" name="phone" maxlength="20"
+                                               onchange="togglePhoneInputBox()" autocomplete="none">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip" data-placement="auto"
+                                       data-html="true" title="Zadejte celou adresu phishingového webu ve formátu http(s)://"></i>
+                                    <label for="website" class="form-label">WWW</label>
+                                    <input type="url" class="form-control" id="website" name="website" maxlength="80" value="https://">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <!-- Phone related -->
+                                <div id="phoneHiddenFields" class="hiddenField">
+                                    <div class="mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Zadejte text SMS, pokud kontakt proběhl přes SMS."></i>
+                                        <label for="sms" class="form-label">Text SMS-WhatsApp</label>
+                                        <textarea class="form-control" id="sms" name="sms" rows="3"
+                                                  maxlength="1000"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Phone related end-->
+                                <!-- E-mail related -->
+                                <div id="emailHiddenFields" class="hiddenField">
+                                    <div class="mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Prosím, sem nakopírujte hlavičku e-mailu. Pokud nevíte, jak je získat, nevadí."></i>
+                                        <label for="email-header" class="form-label">Hlavička e-mailu</label>
+                                        <textarea class="form-control" id="email-header" name="email_header"
+                                                  rows="6" maxlength="4000"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip"
+                                           data-placement="auto" data-html="true"
+                                           title="Text phishingového emailu."></i>
+                                        <label for="email-text" class="form-label">Text e-mailu</label>
+                                        <textarea class="form-control" id="email-text" name="email_text"
+                                                  rows="6"></textarea>
+                                    </div>
+                                </div>
+                                <!-- E-mail related end -->
+                                <div class="mb-3">
+                                    <i class="fas fa-info-circle fa-inverse" data-toggle="tooltip" data-placement="auto"
+                                       data-html="true"
+                                       title="Místo pro jakékoliv dodatečné informace, co se jinam nehodí."></i>
+                                    <label for="note-text" class="form-label">Poznámka k hlášení</label>
+                                    <textarea class="form-control" id="note-text" name="note_text" rows="6"></textarea>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                           required>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Prohlašuji, že zaslané informace jsou správné.
+                                    </label>
+                                </div>
+                                <button id="submit" type="submit" class="btn btn-primary">Odeslat</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-1 mb-lg-0 text-muted">
+                (c) 2023, Sec4good, s.r.o. Provozovatel neodpovídá za škody způsobené používáním této služby. <br/>Ohledně
+                zpracování osobních údajů pište na <a href="mailto:gdpr@sec4good.cz">gdpr@sec4good.cz</a>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="https://sec4good.cz/?utm_source=phishingalert.cz" target="_blank"><img
+                        src="assets/sec4good_mungo_logo_tmave_small.png" alt="Sec4good logo"></a>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+<!-- partial -->
+<script src="assets/script.js"></script>
+</body>
+</html>

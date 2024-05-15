@@ -27,3 +27,7 @@ through RabbitMQ protocol.
 starting them from the IDE which will take care of the setup_
 - Open `localhost:8080` to access web form or `localhost:8080/admin` to access
     administration page in your favourite browser
+
+### Credits
+- All files in `./core/src/main/resources/static` directory were taken from the original [phishingalert.cz project](https://github.com/sec4good/phishingalert_cz) which was made by Marek Sušický (2023). Look at the `./core/src/main/resources/static/LICENSE` file for more information about the licensing.
+- The `./core/controllers/admin/reporting/WebRiskController.kt` file contains some code from Google LLC (2020). See its file header for more information about the licensing.
