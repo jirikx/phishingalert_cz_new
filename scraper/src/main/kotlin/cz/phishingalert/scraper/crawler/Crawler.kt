@@ -9,6 +9,7 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.nio.channels.Channels
 import java.nio.file.Path
+import kotlin.math.log
 
 abstract class Crawler {
     protected val logger: Logger = LoggerFactory.getLogger(javaClass)
