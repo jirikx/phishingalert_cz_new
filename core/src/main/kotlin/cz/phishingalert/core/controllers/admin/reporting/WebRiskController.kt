@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 @Controller
@@ -57,36 +58,38 @@ class WebRiskController(
         val uri = repositoryService.readAccidentById(accidentId)?.url?.toString()
             ?: return ModelAndView("error/404", HttpStatus.NOT_FOUND)
 
-        //------------------ Part of the code from Google LLC starts here ------------------
-        val webRiskServiceClient = WebRiskServiceClient.create()
         try {
-            // Build the Submission object
-            val submission = Submission.newBuilder().setUri(uri).build()
+            val webRiskServiceClient = WebRiskServiceClient.create()
+            webRiskServiceClient.use {
+                //------------------ Part of the code from Google LLC starts here ------------------
+                // Build the Submission object
+                val submission = Submission.newBuilder().setUri(uri).build()
 
-            val threatInfo = ThreatInfo.newBuilder()
-                .setAbuseType(ThreatInfo.AbuseType.SOCIAL_ENGINEERING)
-                .setThreatJustification(ThreatInfo.ThreatJustification.newBuilder()
-                    .addComments(repositoryService.readAccidentById(accidentId)?.noteText ?: "-")
+                val threatInfo = ThreatInfo.newBuilder()
+                    .setAbuseType(ThreatInfo.AbuseType.SOCIAL_ENGINEERING)
+                    .setThreatJustification(ThreatInfo.ThreatJustification.newBuilder()
+                        .addComments(repositoryService.readAccidentById(accidentId)?.noteText ?: "-")
+                        .build()
+                    )
                     .build()
-                )
-                .build()
 
-            val submitUriRequest = SubmitUriRequest.newBuilder()
-                .setParent("projects/${config.googleCloudProjectId}")
-                .setSubmission(submission)
-                .setThreatInfo(threatInfo)
-                .build()
+                val submitUriRequest = SubmitUriRequest.newBuilder()
+                    .setParent("projects/${config.googleCloudProjectId}")
+                    .setSubmission(submission)
+                    .setThreatInfo(threatInfo)
+                    .build()
 
-            try {
-                // Try to submit the URL to the Google WebRisk
-                val submissionResponse: Operation = webRiskServiceClient.submitUriCallable()
-                    .futureCall(submitUriRequest).get(config.googleCloudConnectionTimeout, TimeUnit.SECONDS)
-        
-        //------------------ Part of the code from Google LLC ends here ------------------
-                logger.info("Response from Google: $submissionResponse")
-                return ModelAndView("success")
-            } catch (ex: Exception) {
-                throw ex.cause ?: ex // When the future call fails, the real cause is hidden inside the thrown exception
+                try {
+                    // Try to submit the URL to the Google WebRisk
+                    val submissionResponse: Operation = webRiskServiceClient.submitUriCallable()
+                        .futureCall(submitUriRequest).get(config.googleCloudConnectionTimeout, TimeUnit.SECONDS)
+
+                    //------------------ Part of the code from Google LLC ends here ------------------
+                    logger.info("Response from Google: $submissionResponse")
+                    return ModelAndView("success")
+                } catch (ex: Exception) {
+                    throw ex.cause ?: ex // When the future call fails, the real cause is hidden inside the thrown exception
+                }
             }
         } catch (ex: UnimplementedException) {
             // Handle the case when the Google Cloud doesn't allow the user to use its API method
@@ -97,14 +100,17 @@ class WebRiskController(
                 "Called API method is not implemented or allowed on the side of Google WebRisk."
             )
             return response
+        } catch (ex: IOException) {
+            logger.error("Missing Google WebRisk credentials!")
+            val response = ModelAndView("error/errorPage", HttpStatus.FAILED_DEPENDENCY)
+            response.addObject("message", "Missing Google WebRisk credentials!")
+            return response
         } catch (ex: Exception) {
             // Handle unknown error
             logger.error(ex.toString())
             val response = ModelAndView("error/errorPage", HttpStatus.INTERNAL_SERVER_ERROR)
             response.addObject("message", ex.message)
             return response
-        } finally {
-            webRiskServiceClient.close()
         }
     }
 }

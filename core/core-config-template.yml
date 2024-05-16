@@ -1,0 +1,36 @@
+settings:
+  report-author:
+    name: "Jan Novák"
+    email: test@example.com
+    company:
+    phoneNumber: ccd
+  sftpDirectory: /sftp_user
+  minTimeDiff: 0  # minimal time difference (in minutes) between 2 consecutive crawling of the same URL
+  requireEmailConfirmation: false
+  googleCloudProjectId: savvy-torch-422120
+  googleCloudConnectionTimeout: 10 # in seconds
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    driver-class-name: org.postgresql.Driver
+    username: sa
+    password: password
+  exposed:
+    show-sql: true
+  mail:
+    host: smtp.seznam.cz
+    port: 465
+    username: ${CORE_EMAIL_ADDRESS}
+    password: ${CORE_EMAIL_PASSWORD}
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+  logging:
+    file: test-results.log
+    level:
+      root: error
