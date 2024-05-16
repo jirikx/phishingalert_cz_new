@@ -62,13 +62,18 @@ object WebsiteInfoParser {
         // Parse the registrar and registrant (holder)
         val entitiesJson = jsonResponse["entities"]?.jsonArray
         if (entitiesJson != null) {
-            val entities = json.decodeFromJsonElement<List<Entity>>(entitiesJson)
-            for (e in entities)
-                for (r in e.roles)
-                    when (r) {
-                        "registrar" -> website.domainRegistrar = e.handle
-                        "registrant" -> website.domainHolder = e.handle
-                    }
+            try {
+                val entities = json.decodeFromJsonElement<List<Entity>>(entitiesJson)
+                for (e in entities)
+                    for (r in e.roles)
+                        when (r) {
+                            "registrar" -> website.domainRegistrar = e.handle
+                            "registrant" -> website.domainHolder = e.handle
+                        }
+            } catch (ex: SerializationException) {
+                logger.warn("Missing field in the RDAP JSON, parsing aborted")
+                return null
+            }
         } else {
             logger.warn("Missing entities in the RDAP JSON, parsing aborted")
             return null

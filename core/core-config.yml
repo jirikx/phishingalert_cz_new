@@ -5,8 +5,8 @@ settings:
     company:
     phoneNumber: ccd
   sftpDirectory: /sftp_user
-  minTimeDiff: 500  # minimal time difference (in minutes) between 2 consecutive crawling of the same URL
-  requireEmailConfirmation: true
+  minTimeDiff: 0  # minimal time difference (in minutes) between 2 consecutive crawling of the same URL
+  requireEmailConfirmation: false
   googleCloudProjectId: savvy-torch-422120
   googleCloudConnectionTimeout: 10 # in seconds
 
@@ -30,3 +30,7 @@ spring:
           auth: true
           ssl:
             enable: true
+  logging:
+    file: test-results.log
+    level:
+      root: error

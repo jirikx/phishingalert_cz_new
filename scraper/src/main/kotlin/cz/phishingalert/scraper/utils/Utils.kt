@@ -26,6 +26,14 @@ fun checkURL(url: String, checkProtocol: Boolean = false): Boolean {
 }
 
 fun toRootDomain(url: String): String {
+    // This is a hack which is needed because Guava handles badly .dev subdomains
+    if (url.endsWith(".dev")) {
+        val parts = url.split(".")
+        if (parts.size >= 2) {
+            return "${parts[parts.size - 2]}.${parts[parts.size - 1]}"
+        }
+    }
+
     return InternetDomainName.from(url).topPrivateDomain().toString()
 }
 
