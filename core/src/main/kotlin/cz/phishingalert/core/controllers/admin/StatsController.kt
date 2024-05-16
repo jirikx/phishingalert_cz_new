@@ -1,7 +1,9 @@
 package cz.phishingalert.core.controllers.admin
 
 import cz.phishingalert.common.domain.Author
-import cz.phishingalert.core.RepositoryService
+import cz.phishingalert.common.domain.ModuleInfo
+import cz.phishingalert.common.domain.Website
+import cz.phishingalert.core.services.RepositoryService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -23,6 +25,16 @@ class StatsController(
     fun show(@PathVariable accidentId: Int, model: Model): ModelAndView {
         val accident = repositoryService.readAccidentById(accidentId)
             ?: return ModelAndView("error/404", HttpStatus.NOT_FOUND)
+        var website: Website? = null
+        var dnsRecordNames: Collection<String> = emptyList()
+        var modules: Collection<ModuleInfo> = emptyList()
+
+        // Search for ModuleInfo and DNS records if the Website record exists
+        if (accident.websiteId != null) {
+            website = repositoryService.readWebsiteById(accident.websiteId!!)
+            modules = repositoryService.readModuleInfosByAccidentId(accidentId)
+            dnsRecordNames = repositoryService.readDnsRecordsByWebsiteId(accident.websiteId!!).map { it.name }
+        }
 
         model.addAttribute("accident", accident)
         model.addAttribute(
@@ -30,6 +42,16 @@ class StatsController(
             repositoryService.readAuthorById(accident.authorId) ?: Author(0, "-" , "-", "-", "-")
         )
         model.addAttribute("repositoryService", repositoryService)
+
+        // Add Website object
+        model.addAttribute("website", website)
+
+        // Add collection of ModuleInfo
+        model.addAttribute("usedModules", modules)
+
+        // Add collection of DNS records
+        model.addAttribute("dnsRecordNames", dnsRecordNames)
+
         model.addAttribute(
             "similarAccidents",
             repositoryService.getSimilarAccidents(accident))

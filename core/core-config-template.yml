@@ -21,8 +21,8 @@ spring:
   mail:
     host: smtp.seznam.cz
     port: 465
-    username: example@example.com
-    password: passwordhere
+    username: ${CORE_EMAIL_ADDRESS}
+    password: ${CORE_EMAIL_PASSWORD}
     properties:
       mail:
         debug: true

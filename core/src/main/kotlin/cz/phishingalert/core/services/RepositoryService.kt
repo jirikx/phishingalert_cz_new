@@ -1,4 +1,4 @@
-package cz.phishingalert.core
+package cz.phishingalert.core.services
 
 import cz.phishingalert.common.domain.*
 import cz.phishingalert.common.repository.*

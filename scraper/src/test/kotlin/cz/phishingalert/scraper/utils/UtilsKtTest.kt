@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException
+import java.net.URI
 import java.net.URL
 
 class UtilsKtTest {
@@ -38,6 +39,12 @@ class UtilsKtTest {
             val url = "www_dw_com"
             toRootDomain(url)
         }
+    }
+
+    @Test
+    fun toRootDomainDevCorrectTest() {
+        val url = URL("https://learningjs.pages.dev/").host
+        assertEquals("pages.dev", toRootDomain(url))
     }
 
     @Test

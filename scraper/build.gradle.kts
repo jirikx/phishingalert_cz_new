@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
+    implementation("com.google.guava:guava:33.2.0-jre")
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.spring.gradle:dependency-management-plugin:1.1.4")
@@ -31,7 +32,6 @@ dependencies {
     implementation("commons-net:commons-net:3.10.0")
     implementation("com.microsoft.playwright:playwright:1.43.0")
     implementation("dnsjava:dnsjava:3.5.3")
-    implementation("com.google.guava:guava:33.1.0-jre")
     implementation("org.postgresql:postgresql")
     implementation("com.github.mwiede:jsch:0.2.17")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

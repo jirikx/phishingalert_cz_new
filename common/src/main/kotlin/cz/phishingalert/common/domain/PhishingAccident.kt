@@ -17,7 +17,7 @@ object PhishingAccidents : IntIdTable() {
     val sourcePhoneNumber = varchar("source_phone_number", 100).nullable()
     val author = reference("author_id", Authors)
     val website = reference("website_id", Websites).nullable()
-    val guid = uuid("guid").defaultExpression(CustomFunction("gen_random_uuid", UUIDColumnType()))
+    val guid = uuid("guid")
 }
 
 data class PhishingAccident(
